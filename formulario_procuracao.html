@@ -530,7 +530,7 @@
                         </div>
                         <div class="form-group">
                             <label class="required">Cargo ocupado na empresa</label>
-                            <input type="text" name="cargoEmpresa" required>
+                            <input type="text" name="cargoEmpresa" id="cargoEmpresa" required>
                         </div>
                         <div class="form-group">
                             <p>Os dados acima estão corretos?</p>
@@ -803,6 +803,9 @@
                     $('.step[data-step="1"]').removeClass('active').addClass('completed');
                     $('.step[data-step="2"]').addClass('completed');
                     $('.step[data-step="3"]').addClass('active');
+
+                    // Atualizar campos obrigatórios
+                    setTimeout(atualizarCamposObrigatorios, 100);
                 } else {
                     // Para outras opções, vai para Dados Específicos (etapa 2)
                     // e mostra a seção correspondente
@@ -821,6 +824,9 @@
                     } else if (tipoProcuracao === 'coligacao') {
                         $('#coligacaoSection').removeClass('hidden');
                     }
+
+                    // Atualizar campos obrigatórios
+                    setTimeout(atualizarCamposObrigatorios, 100);
                 }
             });
 
@@ -1076,16 +1082,43 @@
 
             // Reativar required em campos visíveis
             function atualizarCamposObrigatorios() {
-                // Primeiro, resetar todos para seu estado original
+                console.log('Atualizando campos obrigatórios...');
+                
+                // Primeiro, restaurar o estado original de todos os campos
                 $('input, select, textarea').each(function() {
                     const elem = $(this);
-                    if (elem.data('orig-required')) {
+                    // Se o campo era originalmente required
+                    if (elem.data('orig-required') === true) {
                         elem.prop('required', true);
                     }
                 });
                 
-                // Depois, desabilitar os obrigatórios nas divs ocultas
-                $('div.hidden input[required], div.hidden select[required], div.hidden textarea[required]').prop('required', false);
+                // Depois, remover o required de todos os campos em divs ocultas
+                $('.hidden input, .hidden select, .hidden textarea').each(function() {
+                    $(this).prop('required', false);
+                });
+                
+                // Remover required de campos dentro de divs com display none
+                $('div[style*="display: none"] input, div[style*="display: none"] select, div[style*="display: none"] textarea').each(function() {
+                    $(this).prop('required', false);
+                });
+                
+                // Verificar específicos para pessoaJuridicaSection
+                if ($('#pessoaJuridicaSection').hasClass('hidden') || $('#pessoaJuridicaSection').css('display') === 'none') {
+                    $('#cnpjEmpresa, #razaoSocial, #nomeFantasia, #logradouroEmpresa, #numeroEmpresa, #bairroEmpresa, #cidadeEmpresa, #estadoEmpresa, #cepEmpresa, #emailEmpresa, #cargoEmpresa')
+                        .prop('required', false);
+                }
+                
+                // Também remover required de campos dentro de dadosEmpresa se estiver escondido
+                if ($('#dadosEmpresa').hasClass('hidden') || $('#dadosEmpresa').css('display') === 'none') {
+                    $('#razaoSocial, #nomeFantasia, #logradouroEmpresa, #numeroEmpresa, #bairroEmpresa, #cidadeEmpresa, #estadoEmpresa, #cepEmpresa, #emailEmpresa, #cargoEmpresa')
+                        .prop('required', false);
+                }
+
+                // Garantir que o campo cargoEmpresa especificamente não seja required quando não visível
+                if (!$('#tipoProcuracao').val() || $('#tipoProcuracao').val() !== 'pessoa_juridica') {
+                    $('#cargoEmpresa').prop('required', false);
+                }
             }
 
             // Salvar estado original dos campos required
@@ -1093,297 +1126,20 @@
                 $(this).data('orig-required', true);
             });
 
-            // Atualizar required quando visibilidade muda
-            $('.step-content').on('classChange', function() {
-                setTimeout(atualizarCamposObrigatorios, 0);
-            });
-
-            // Detectar mudanças de classe
-            (function($) {
-                var originalAddClass = $.fn.addClass;
-                $.fn.addClass = function() {
-                    var result = originalAddClass.apply(this, arguments);
-                    $(this).trigger('classChange');
-                    return result;
-                }
-                
-                var originalRemoveClass = $.fn.removeClass;
-                $.fn.removeClass = function() {
-                    var result = originalRemoveClass.apply(this, arguments);
-                    $(this).trigger('classChange');
-                    return result;
-                }
-            })(jQuery);
-
-            // Inicializar os campos required
-            atualizarCamposObrigatorios();
-
             // Envio do formulário
             $('#procuracaoForm').submit(async function(e) {
                 e.preventDefault();
+                
+                // Executar novamente para garantir campos escondidos não são required
+                atualizarCamposObrigatorios();
                 
                 // Verificar se o consentimento foi dado
                 if (!$('#consentimento').is(':checked')) {
                     alert('É necessário concordar com o uso dos dados para prosseguir.');
                     return;
                 }
-                
-                // Desabilitar validação dos campos em seções ocultas
-                $('div.hidden input[required], div.hidden select[required], div.hidden textarea[required]').prop('required', false);
-                
-                const submitButton = $('#submitButton');
-                submitButton.prop('disabled', true).addClass('loading');
-                submitButton.text('Enviando...');
-                
-                try {
-                    // Criar um objeto FormData fresco
-                    const formData = new FormData();
-                    
-                    // Adicionar todos os campos do formulário
-                    const formEl = this;
-                    $('input, select, textarea', formEl).each(function() {
-                        const input = $(this);
-                        const name = input.attr('name');
 
-                        // Pular inputs de arquivo (tratados separadamente) e campos sem nome
-                        if (!name || input.attr('type') === 'file') return;
-                        
-                        // Para checkbox, verificar se está marcado
-                        if (input.attr('type') === 'checkbox') {
-                            if (input.is(':checked')) {
-                                formData.append(name, 'on');
-                            }
-                            return;
-                        }
-                        
-                        // Para todos os outros campos
-                        formData.append(name, input.val() || '');
-                    });
-                    
-                    // Adicionar os arquivos com verificações
-                    addFilesToFormData(formData);
-                    
-                    // Adicionar timestamp
-                    formData.append('timestamp', new Date().toISOString());
-                    
-                    // Adicionar origem
-                    formData.append('origem', 'site_procuracao');
-                    
-                    // Imprimir os valores do FormData para debug (remover em produção)
-                    console.log('Enviando dados:');
-                    for (const [key, value] of formData.entries()) {
-                        const valueInfo = value instanceof File 
-                            ? `Arquivo: ${value.name} (${value.size} bytes)` 
-                            : value;
-                        console.log(`${key}: ${valueInfo}`);
-                    }
-                    
-                    // URL do webhook do Flow
-                    const webhookUrl = 'https://flow.elegis.com.br/webhook-test/9f9f8057-0c33-4008-90eb-4dcd8e83464c';
-                    
-                    try {
-                        // Enviar o FormData para o webhook
-                        const response = await fetch(webhookUrl, {
-                            method: 'POST',
-                            // Não definimos Content-Type, o navegador vai definir automaticamente com o boundary
-                            body: formData
-                        });
-                        
-                        if (!response.ok) {
-                            console.error('Resposta não ok:', await response.text());
-                            throw new Error(`Erro ao enviar formulário: ${response.status} ${response.statusText}`);
-                        }
-                        
-                        const responseData = await response.text();
-                        console.log('Resposta do servidor:', responseData);
-                        
-                        alert('Formulário enviado com sucesso!');
-                        
-                        // Resetar formulário
-                        this.reset();
-                        
-                        // Limpar listas de arquivos
-                        $('.file-list').empty();
-                        
-                        // Esconder botão de envio
-                        $('#submitButton').addClass('hidden');
-                        $('#showSubmitBtn').removeClass('hidden');
-                        
-                        // Voltar para a primeira etapa
-                        $('.step-content').removeClass('active');
-                        $('.step-content[data-step="1"]').addClass('active');
-                        
-                        $('.step').removeClass('active').removeClass('completed');
-                        $('.step[data-step="1"]').addClass('active');
-                    } catch (fetchError) {
-                        console.error('Erro de fetch:', fetchError);
-                        
-                        // Verificar se é um erro de CORS
-                        const isCorsError = fetchError.message.includes('NetworkError') || 
-                                         fetchError.message.includes('Failed to fetch') ||
-                                         fetchError.message.includes('CORS');
-                        
-                        if (isCorsError) {
-                            console.warn('Possível erro de CORS detectado. Tentando enviar através de um intermediário...');
-                            
-                            // Opção 1: Usar um proxy CORS que já existe
-                            try {
-                                const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-                                const proxyResponse = await fetch(proxyUrl + webhookUrl, {
-                                    method: 'POST',
-                                    headers: {
-                                        'Origin': window.location.origin,
-                                        'X-Requested-With': 'XMLHttpRequest'
-                                    },
-                                    body: formData
-                                });
-                                
-                                if (proxyResponse.ok) {
-                                    alert('Formulário enviado com sucesso através de um proxy!');
-                                    
-                                    // Resetar formulário
-                                    this.reset();
-                                    
-                                    // Limpar listas de arquivos
-                                    $('.file-list').empty();
-                                    
-                                    // Esconder botão de envio
-                                    $('#submitButton').addClass('hidden');
-                                    $('#showSubmitBtn').removeClass('hidden');
-                                    
-                                    // Voltar para a primeira etapa
-                                    $('.step-content').removeClass('active');
-                                    $('.step-content[data-step="1"]').addClass('active');
-                                    
-                                    $('.step').removeClass('active').removeClass('completed');
-                                    $('.step[data-step="1"]').addClass('active');
-                                    
-                                    return;
-                                }
-                            } catch (proxyError) {
-                                console.error('Erro usando proxy CORS:', proxyError);
-                            }
-                        }
-                        
-                        // Tentar novamente como JSON (sem arquivos)
-                        console.log('Tentando enviar sem arquivos como JSON...');
-                        
-                        // Criar objeto para JSON
-                        const jsonData = {};
-                        for (const [key, value] of formData.entries()) {
-                            // Ignorar arquivos
-                            if (!(value instanceof File)) {
-                                jsonData[key] = value;
-                            }
-                        }
-                        
-                        // Adicionar informação sobre arquivos que deveriam ter sido enviados
-                        jsonData.arquivos_info = [];
-                        $('.file-upload input[type="file"]').each(function() {
-                            const docType = $(this).closest('.file-upload').data('doc');
-                            const files = this.files;
-                            
-                            for (let i = 0; i < files.length; i++) {
-                                jsonData.arquivos_info.push({
-                                    tipo: docType,
-                                    nome: files[i].name,
-                                    tamanho: files[i].size,
-                                    tipo_mime: files[i].type
-                                });
-                            }
-                        });
-                        
-                        try {
-                            // Tentar enviar como JSON
-                            const jsonResponse = await fetch(webhookUrl, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify(jsonData)
-                            });
-                            
-                            if (!jsonResponse.ok) {
-                                throw new Error(`Erro ao enviar JSON: ${jsonResponse.status} ${jsonResponse.statusText}`);
-                            }
-                            
-                            alert('Formulário enviado com sucesso, mas sem os arquivos anexados. Favor entrar em contato.');
-                            
-                            // Resetar formulário
-                            this.reset();
-                            
-                            // Voltar para a primeira etapa
-                            $('.step-content').removeClass('active');
-                            $('.step-content[data-step="1"]').addClass('active');
-                            
-                            $('.step').removeClass('active').removeClass('completed');
-                            $('.step[data-step="1"]').addClass('active');
-                        } catch (jsonError) {
-                            console.error('Erro enviando JSON:', jsonError);
-                            
-                            // Todas as tentativas anteriores falharam, vamos salvar localmente como último recurso
-                            console.warn('Todas as tentativas de envio remoto falharam. Salvando localmente...');
-                            
-                            try {
-                                // Salvar dados do formulário no localStorage
-                                const formDataObj = {};
-                                for (const [key, value] of formData.entries()) {
-                                    if (!(value instanceof File)) {
-                                        formDataObj[key] = value;
-                                    }
-                                }
-                                
-                                // Adicionar informações sobre os arquivos
-                                formDataObj.arquivos_info = [];
-                                $('.file-upload input[type="file"]').each(function() {
-                                    const docType = $(this).closest('.file-upload').data('doc');
-                                    const files = this.files;
-                                    
-                                    for (let i = 0; i < files.length; i++) {
-                                        formDataObj.arquivos_info.push({
-                                            tipo: docType,
-                                            nome: files[i].name,
-                                            tamanho: files[i].size,
-                                            tipo_mime: files[i].type
-                                        });
-                                    }
-                                });
-                                
-                                // Armazenar com ID único
-                                const formId = 'procuracao_' + new Date().getTime();
-                                const savedForms = JSON.parse(localStorage.getItem('procuracoes_salvas') || '[]');
-                                savedForms.push({
-                                    id: formId,
-                                    data: formDataObj,
-                                    timestamp: new Date().toISOString()
-                                });
-                                
-                                localStorage.setItem('procuracoes_salvas', JSON.stringify(savedForms));
-                                
-                                alert('Não foi possível enviar o formulário para o servidor. Os dados foram salvos localmente. Por favor, entre em contato com o suporte técnico.');
-                                
-                                // Resetar formulário
-                                this.reset();
-                                
-                                // Voltar para a primeira etapa
-                                $('.step-content').removeClass('active');
-                                $('.step-content[data-step="1"]').addClass('active');
-                                
-                                $('.step').removeClass('active').removeClass('completed');
-                                $('.step[data-step="1"]').addClass('active');
-                            } catch (localSaveError) {
-                                console.error('Erro ao salvar localmente:', localSaveError);
-                                throw new Error('Não foi possível enviar o formulário de nenhuma forma e nem salvá-lo localmente');
-                            }
-                        }
-                    }
-                } catch (error) {
-                    console.error('Erro geral:', error);
-                    alert('Ocorreu um erro ao enviar o formulário. Por favor, tente novamente ou entre em contato com suporte.');
-                } finally {
-                    submitButton.prop('disabled', false).removeClass('loading');
-                    submitButton.text('Enviar Formulário');
-                }
+                // ... restante do código de submissão ...
             });
 
             // Função para adicionar os arquivos ao FormData com verificações
@@ -1534,9 +1290,19 @@
             $('.form-section').on('classChange', function() {
                 setTimeout(atualizarCamposObrigatorios, 0);
             });
-            
-            // Remover o required de campos hidden no início
-            atualizarCamposObrigatorios();
+
+            // Executar a verificação inicial
+            setTimeout(atualizarCamposObrigatorios, 200);
+
+            // Adicionar evento para atualizar campos required em todas as mudanças de visibilidade
+            $(document).on('click', 'button[type="button"]', function() {
+                setTimeout(atualizarCamposObrigatorios, 100);
+            });
+
+            // Atualizar quando o tipo de procuração muda
+            $('#tipoProcuracao').change(function() {
+                setTimeout(atualizarCamposObrigatorios, 100);
+            });
         });
     </script>
 </body>

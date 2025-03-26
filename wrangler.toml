@@ -6,7 +6,6 @@ compatibility_date = "2023-10-30"
 [site]
 bucket = "./public"
 
-
 # Configuração para permitir uploads maiores
 [vars]
 MAX_UPLOAD_SIZE = "25MB"
@@ -14,4 +13,4 @@ MAX_UPLOAD_SIZE = "25MB"
 [[d1_databases]]
 binding = "DB"
 database_name = "banco_juridico"
-database_id = "fee873da-0b4c-484d-8258-2ee139b246fd"
+database_id = "fee873da-0b4c-484d-8258-2ee139b246fd" 
