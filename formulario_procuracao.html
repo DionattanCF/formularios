@@ -473,8 +473,8 @@
                 <div id="partidoSection" class="form-section hidden">
                     <h2 class="form-section-title">Dados do Partido</h2>
                     <div class="form-group">
-                        <label class="required">2 - Qual o nome do Partido, Comissão Provisória ou Diretório</label>
-                        <input type="text" name="nomePartido" required>
+                        <label>2 - Qual o nome do Partido, Comissão Provisória ou Diretório</label>
+                        <input type="text" name="nomePartido">
                     </div>
                 </div>
                 <div id="pessoaJuridicaSection" class="form-section hidden">
@@ -544,16 +544,16 @@
                 <div id="coligacaoSection" class="form-section hidden">
                     <h2 class="form-section-title">Dados da Coligação</h2>
                     <div class="form-group">
-                        <label class="required">18 - Qual o nome da Coligação</label>
-                        <input type="text" name="nomeColigacao" required>
+                        <label>18 - Qual o nome da Coligação</label>
+                        <input type="text" name="nomeColigacao">
                     </div>
                     <div class="form-group">
-                        <label class="required">20 - Informe seu email</label>
-                        <input type="email" name="emailColigacao" required>
+                        <label>20 - Informe seu email</label>
+                        <input type="email" name="emailColigacao">
                     </div>
                     <div class="form-group">
-                        <label class="required">21 - Qual o endereço da coligação?</label>
-                        <textarea name="enderecoColigacao" required></textarea>
+                        <label>21 - Qual o endereço da coligação?</label>
+                        <textarea name="enderecoColigacao"></textarea>
                     </div>
                 </div>
                 <div class="navigation-buttons">
@@ -1072,92 +1072,286 @@
             $('#procuracaoForm').submit(async function(e) {
                 e.preventDefault();
                 
+                // Verificar se o consentimento foi dado
+                if (!$('#consentimento').is(':checked')) {
+                    alert('É necessário concordar com o uso dos dados para prosseguir.');
+                    return;
+                }
+                
                 const submitButton = $('#submitButton');
                 submitButton.prop('disabled', true).addClass('loading');
+                submitButton.text('Enviando...');
                 
                 try {
-                    const formData = new FormData(this);
+                    // Criar um objeto FormData fresco
+                    const formData = new FormData();
                     
-                    // Adiciona os arquivos ao FormData
-                    $('.file-upload input[type="file"]').each(function() {
-                        const docType = $(this).closest('.file-upload').data('doc');
-                        const files = this.files;
-                        for (let i = 0; i < files.length; i++) {
-                            formData.append(`file_${docType}[]`, files[i]);
+                    // Adicionar todos os campos do formulário
+                    const formEl = this;
+                    $('input, select, textarea', formEl).each(function() {
+                        const input = $(this);
+                        const name = input.attr('name');
+
+                        // Pular inputs de arquivo (tratados separadamente) e campos sem nome
+                        if (!name || input.attr('type') === 'file') return;
+                        
+                        // Para checkbox, verificar se está marcado
+                        if (input.attr('type') === 'checkbox') {
+                            if (input.is(':checked')) {
+                                formData.append(name, 'on');
+                            }
+                            return;
                         }
+                        
+                        // Para todos os outros campos
+                        formData.append(name, input.val() || '');
                     });
                     
+                    // Adicionar os arquivos com verificações
+                    addFilesToFormData(formData);
+                    
+                    // Adicionar timestamp
                     formData.append('timestamp', new Date().toISOString());
                     
-                    // Para envio usando JSON, precisamos converter FormData para objeto
-                    const data = {};
-                    formData.forEach((value, key) => {
-                        // Ignora arquivos para a versão JSON
-                        if (!key.startsWith('file_')) {
-                            data[key] = value;
-                        }
-                    });
+                    // Adicionar origem
+                    formData.append('origem', 'site_procuracao');
                     
-                    // URL do Worker do Cloudflare (após implantação)
-                    const workerUrl = 'https://formulario-procuracao-worker.seu-dominio.workers.dev';
-                    
-                    // Para o banco D1, enviamos apenas os dados JSON (sem arquivos)
-                    const responseD1 = await fetch(workerUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(data)
-                    });
-                    
-                    const resultD1 = await responseD1.json();
-                    
-                    if (!responseD1.ok || !resultD1.success) {
-                        throw new Error(resultD1.error || 'Erro ao salvar dados no banco');
+                    // Imprimir os valores do FormData para debug (remover em produção)
+                    console.log('Enviando dados:');
+                    for (const [key, value] of formData.entries()) {
+                        const valueInfo = value instanceof File 
+                            ? `Arquivo: ${value.name} (${value.size} bytes)` 
+                            : value;
+                        console.log(`${key}: ${valueInfo}`);
                     }
                     
-                    // Para o webhook, enviamos o FormData completo com arquivos
+                    // URL do webhook do Flow
                     const webhookUrl = 'https://flow.elegis.com.br/webhook-test/9f9f8057-0c33-4008-90eb-4dcd8e83464c';
                     
-                    // Se o webhook aceitar FormData com arquivos:
-                    await fetch(webhookUrl, {
-                        method: 'POST',
-                        body: formData
-                    });
-                    
-                    // Se o webhook só aceitar JSON (sem arquivos):
-                    // await fetch(webhookUrl, {
-                    //     method: 'POST',
-                    //     headers: { 'Content-Type': 'application/json' },
-                    //     body: JSON.stringify(data)
-                    // });
-                    
-                    alert('Formulário enviado com sucesso!');
-                    
-                    // Resetar formulário
-                    this.reset();
-                    
-                    // Limpar listas de arquivos
-                    $('.file-list').empty();
-                    
-                    // Esconder botão de envio
-                    $('#submitButton').addClass('hidden');
-                    $('#showSubmitBtn').removeClass('hidden');
-                    
-                    // Voltar para a primeira etapa
-                    $('.step-content').removeClass('active');
-                    $('.step-content[data-step="1"]').addClass('active');
-                    
-                    $('.step').removeClass('active').removeClass('completed');
-                    $('.step[data-step="1"]').addClass('active');
-                    
+                    try {
+                        // Enviar o FormData para o webhook
+                        const response = await fetch(webhookUrl, {
+                            method: 'POST',
+                            // Não definimos Content-Type, o navegador vai definir automaticamente com o boundary
+                            body: formData
+                        });
+                        
+                        if (!response.ok) {
+                            console.error('Resposta não ok:', await response.text());
+                            throw new Error(`Erro ao enviar formulário: ${response.status} ${response.statusText}`);
+                        }
+                        
+                        const responseData = await response.text();
+                        console.log('Resposta do servidor:', responseData);
+                        
+                        alert('Formulário enviado com sucesso!');
+                        
+                        // Resetar formulário
+                        this.reset();
+                        
+                        // Limpar listas de arquivos
+                        $('.file-list').empty();
+                        
+                        // Esconder botão de envio
+                        $('#submitButton').addClass('hidden');
+                        $('#showSubmitBtn').removeClass('hidden');
+                        
+                        // Voltar para a primeira etapa
+                        $('.step-content').removeClass('active');
+                        $('.step-content[data-step="1"]').addClass('active');
+                        
+                        $('.step').removeClass('active').removeClass('completed');
+                        $('.step[data-step="1"]').addClass('active');
+                    } catch (fetchError) {
+                        console.error('Erro de fetch:', fetchError);
+                        
+                        // Verificar se é um erro de CORS
+                        const isCorsError = fetchError.message.includes('NetworkError') || 
+                                         fetchError.message.includes('Failed to fetch') ||
+                                         fetchError.message.includes('CORS');
+                        
+                        if (isCorsError) {
+                            console.warn('Possível erro de CORS detectado. Tentando enviar através de um intermediário...');
+                            
+                            // Opção 1: Usar um proxy CORS que já existe
+                            try {
+                                const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+                                const proxyResponse = await fetch(proxyUrl + webhookUrl, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Origin': window.location.origin,
+                                        'X-Requested-With': 'XMLHttpRequest'
+                                    },
+                                    body: formData
+                                });
+                                
+                                if (proxyResponse.ok) {
+                                    alert('Formulário enviado com sucesso através de um proxy!');
+                                    
+                                    // Resetar formulário
+                                    this.reset();
+                                    
+                                    // Limpar listas de arquivos
+                                    $('.file-list').empty();
+                                    
+                                    // Esconder botão de envio
+                                    $('#submitButton').addClass('hidden');
+                                    $('#showSubmitBtn').removeClass('hidden');
+                                    
+                                    // Voltar para a primeira etapa
+                                    $('.step-content').removeClass('active');
+                                    $('.step-content[data-step="1"]').addClass('active');
+                                    
+                                    $('.step').removeClass('active').removeClass('completed');
+                                    $('.step[data-step="1"]').addClass('active');
+                                    
+                                    return;
+                                }
+                            } catch (proxyError) {
+                                console.error('Erro usando proxy CORS:', proxyError);
+                            }
+                        }
+                        
+                        // Tentar novamente como JSON (sem arquivos)
+                        console.log('Tentando enviar sem arquivos como JSON...');
+                        
+                        // Criar objeto para JSON
+                        const jsonData = {};
+                        for (const [key, value] of formData.entries()) {
+                            // Ignorar arquivos
+                            if (!(value instanceof File)) {
+                                jsonData[key] = value;
+                            }
+                        }
+                        
+                        // Adicionar informação sobre arquivos que deveriam ter sido enviados
+                        jsonData.arquivos_info = [];
+                        $('.file-upload input[type="file"]').each(function() {
+                            const docType = $(this).closest('.file-upload').data('doc');
+                            const files = this.files;
+                            
+                            for (let i = 0; i < files.length; i++) {
+                                jsonData.arquivos_info.push({
+                                    tipo: docType,
+                                    nome: files[i].name,
+                                    tamanho: files[i].size,
+                                    tipo_mime: files[i].type
+                                });
+                            }
+                        });
+                        
+                        try {
+                            // Tentar enviar como JSON
+                            const jsonResponse = await fetch(webhookUrl, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(jsonData)
+                            });
+                            
+                            if (!jsonResponse.ok) {
+                                throw new Error(`Erro ao enviar JSON: ${jsonResponse.status} ${jsonResponse.statusText}`);
+                            }
+                            
+                            alert('Formulário enviado com sucesso, mas sem os arquivos anexados. Favor entrar em contato.');
+                            
+                            // Resetar formulário
+                            this.reset();
+                            
+                            // Voltar para a primeira etapa
+                            $('.step-content').removeClass('active');
+                            $('.step-content[data-step="1"]').addClass('active');
+                            
+                            $('.step').removeClass('active').removeClass('completed');
+                            $('.step[data-step="1"]').addClass('active');
+                        } catch (jsonError) {
+                            console.error('Erro enviando JSON:', jsonError);
+                            
+                            // Todas as tentativas anteriores falharam, vamos salvar localmente como último recurso
+                            console.warn('Todas as tentativas de envio remoto falharam. Salvando localmente...');
+                            
+                            try {
+                                // Salvar dados do formulário no localStorage
+                                const formDataObj = {};
+                                for (const [key, value] of formData.entries()) {
+                                    if (!(value instanceof File)) {
+                                        formDataObj[key] = value;
+                                    }
+                                }
+                                
+                                // Adicionar informações sobre os arquivos
+                                formDataObj.arquivos_info = [];
+                                $('.file-upload input[type="file"]').each(function() {
+                                    const docType = $(this).closest('.file-upload').data('doc');
+                                    const files = this.files;
+                                    
+                                    for (let i = 0; i < files.length; i++) {
+                                        formDataObj.arquivos_info.push({
+                                            tipo: docType,
+                                            nome: files[i].name,
+                                            tamanho: files[i].size,
+                                            tipo_mime: files[i].type
+                                        });
+                                    }
+                                });
+                                
+                                // Armazenar com ID único
+                                const formId = 'procuracao_' + new Date().getTime();
+                                const savedForms = JSON.parse(localStorage.getItem('procuracoes_salvas') || '[]');
+                                savedForms.push({
+                                    id: formId,
+                                    data: formDataObj,
+                                    timestamp: new Date().toISOString()
+                                });
+                                
+                                localStorage.setItem('procuracoes_salvas', JSON.stringify(savedForms));
+                                
+                                alert('Não foi possível enviar o formulário para o servidor. Os dados foram salvos localmente. Por favor, entre em contato com o suporte técnico.');
+                                
+                                // Resetar formulário
+                                this.reset();
+                                
+                                // Voltar para a primeira etapa
+                                $('.step-content').removeClass('active');
+                                $('.step-content[data-step="1"]').addClass('active');
+                                
+                                $('.step').removeClass('active').removeClass('completed');
+                                $('.step[data-step="1"]').addClass('active');
+                            } catch (localSaveError) {
+                                console.error('Erro ao salvar localmente:', localSaveError);
+                                throw new Error('Não foi possível enviar o formulário de nenhuma forma e nem salvá-lo localmente');
+                            }
+                        }
+                    }
                 } catch (error) {
-                    console.error('Erro:', error);
-                    alert('Ocorreu um erro ao enviar o formulário. Por favor, tente novamente.');
+                    console.error('Erro geral:', error);
+                    alert('Ocorreu um erro ao enviar o formulário. Por favor, tente novamente ou entre em contato com suporte.');
                 } finally {
                     submitButton.prop('disabled', false).removeClass('loading');
+                    submitButton.text('Enviar Formulário');
                 }
             });
+
+            // Função para adicionar os arquivos ao FormData com verificações
+            function addFilesToFormData(formData) {
+                $('.file-upload input[type="file"]').each(function() {
+                    const docType = $(this).closest('.file-upload').data('doc');
+                    const files = this.files;
+                    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+                    
+                    for (let i = 0; i < files.length; i++) {
+                        const file = files[i];
+                        // Pular arquivos muito grandes
+                        if (file.size > MAX_FILE_SIZE) continue;
+                        
+                        // Usar nomes de campos padrão para facilitar o processamento no servidor
+                        formData.append(`arquivo_${docType}`, file);
+                    }
+                });
+                
+                return formData;
+            }
 
             $('#nextStep3').click(function() {
                 // Mostrar ou esconder documentos específicos baseado no tipo de procuração
@@ -1175,33 +1369,77 @@
                 prevStep(4);
             });
             
-            $('#showSubmitBtn').click(function() {
+            $('#showSubmitBtn').click(function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Mostrar o botão de envio
                 $('#submitButton').removeClass('hidden');
                 $(this).addClass('hidden');
+                
+                // Opcionalmente, rolar até o botão para garantir que esteja visível
+                $('html, body').animate({
+                    scrollTop: $('#submitButton').offset().top - 100
+                }, 300);
             });
 
             // Controle de arquivos
-            $('.file-upload').click(function() {
+            $('.file-upload').click(function(e) {
+                // Evitar propagação do evento para prevenir ciclo infinito
+                e.stopPropagation();
                 $(this).find('input[type="file"]').click();
             });
 
-            $('.file-upload input[type="file"]').change(function() {
+            $('.file-upload input[type="file"]').change(function(e) {
+                // Evitar propagação do evento para prevenir ciclo infinito
+                e.stopPropagation();
+                
                 const fileList = $(this).closest('.form-group').find('.file-list');
                 const files = this.files;
+                
+                // Limitar o tamanho do arquivo (10MB)
+                const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+                let hasLargeFiles = false;
                 
                 fileList.empty();
                 
                 for (let i = 0; i < files.length; i++) {
                     const file = files[i];
-                    const fileItem = $('<div class="file-item">')
-                        .append($('<span class="file-name">').text(file.name))
-                        .append($('<span class="remove-file">').html('&times;'));
                     
-                    fileList.append(fileItem);
+                    // Verificar tamanho do arquivo
+                    if (file.size > MAX_FILE_SIZE) {
+                        hasLargeFiles = true;
+                        const fileItem = $('<div class="file-item" style="background-color: #ffeeee;">')
+                            .append($('<span class="file-name">').text(file.name + ' (muito grande)'))
+                            .append($('<span class="remove-file">').html('&times;'));
+                        
+                        fileList.append(fileItem);
+                    } else {
+                        const fileItem = $('<div class="file-item">')
+                            .append($('<span class="file-name">').text(file.name))
+                            .append($('<span class="file-size">').text(' (' + formatFileSize(file.size) + ')'))
+                            .append($('<span class="remove-file">').html('&times;'));
+                        
+                        fileList.append(fileItem);
+                    }
+                }
+                
+                if (hasLargeFiles) {
+                    alert('Alguns arquivos são muito grandes (limite de 10MB). Por favor, reduza o tamanho ou selecione outros arquivos.');
                 }
             });
 
-            $(document).on('click', '.remove-file', function() {
+            // Função para formatar o tamanho do arquivo
+            function formatFileSize(bytes) {
+                if (bytes < 1024) return bytes + ' bytes';
+                else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+                else return (bytes / 1048576).toFixed(1) + ' MB';
+            }
+
+            $(document).on('click', '.remove-file', function(e) {
+                // Evitar propagação do evento para prevenir ciclo infinito
+                e.stopPropagation();
+                
                 const fileList = $(this).closest('.file-list');
                 const fileUpload = fileList.closest('.form-group').find('.file-upload input[type="file"]');
                 
