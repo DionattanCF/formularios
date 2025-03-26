@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Cancelamento/Alteração de Plano - Sistema Elegis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3f51b5;
+            --primary-light: #757de8;
+            --primary-dark: #002984;
+            --secondary-color: #ff4081;
+            --secondary-light: #ff79b0;
+            --secondary-dark: #c60055;
+            --success-color: #4caf50;
+            --danger-color: #f44336;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --border-color: #e0e0e0;
+            --border-radius: 12px;
+            --box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --font-primary: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .bg-white {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 40px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .bg-white::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .text-2xl {
+            color: var(--primary-color);
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .text-lg {
+            color: var(--primary-color);
+            font-size: 24px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .text-lg i {
+            margin-right: 12px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--dark-color);
+            font-weight: 500;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="tel"],
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            transition: var(--transition);
+            background-color: #f9f9f9;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="email"]:focus,
+        .form-group input[type="tel"]:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(63, 81, 181, 0.2);
+            background-color: white;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .radio-option input {
+            margin: 0;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px 24px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            box-shadow: 0 4px 10px rgba(63, 81, 181, 0.3);
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+            box-shadow: 0 6px 15px rgba(63, 81, 181, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .bg-white {
+                padding: 30px 20px;
+            }
+
+            .text-2xl {
+                font-size: 26px;
+            }
+
+            .text-lg {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-white">
+        <h2 class="text-2xl font-bold mb-4 text-center text-gray-800">Cancelamento/Alteração de Plano</h2>
+        
+        <div id="successMessage" class="alert alert-success">
+            ✅ Solicitação enviada com sucesso! Em breve entraremos em contato.
+        </div>
+        
+        <div id="errorMessage" class="alert alert-error">
+            ❌ Ocorreu um erro ao enviar sua solicitação. Por favor, tente novamente.
+        </div>
+        
+        <form id="cancelForm" class="space-y-5">
+            <!-- Tipo de Solicitação -->
+            <div class="form-group">
+                <h3 class="text-lg font-semibold mb-4">Tipo de Solicitação</h3>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="tipoSolicitacao" value="cancelamento" required>
+                        <span>Cancelamento</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="tipoSolicitacao" value="alteracao">
+                        <span>Alteração de Plano</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Informações do Solicitante -->
+            <div class="form-group">
+                <h3 class="text-lg font-semibold mb-4">Informações do Solicitante</h3>
+                
+                <div class="form-group">
+                    <label for="nome">Nome Completo: <span class="text-red-500">*</span></label>
+                    <input type="text" id="nome" name="nome" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">E-mail Master: <span class="text-red-500">*</span></label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="whatsapp">WhatsApp: <span class="text-red-500">*</span></label>
+                    <input type="tel" id="whatsapp" name="whatsapp" placeholder="Ex: (11) 98765-4321" required>
+                </div>
+            </div>
+
+            <!-- Motivo do Cancelamento -->
+            <div id="motivoCancelamento" class="form-group hidden">
+                <h3 class="text-lg font-semibold mb-4">Motivo do Cancelamento</h3>
+                <div class="form-group">
+                    <label for="motivo">Por favor, explique o motivo do cancelamento: <span class="text-red-500">*</span></label>
+                    <textarea id="motivo" name="motivo" required></textarea>
+                </div>
+            </div>
+
+            <!-- Alteração de Plano -->
+            <div id="alteracaoPlano" class="form-group hidden">
+                <h3 class="text-lg font-semibold mb-4">Alteração de Plano</h3>
+                
+                <div class="form-group">
+                    <label for="planoAtual">Plano Atual: <span class="text-red-500">*</span></label>
+                    <select id="planoAtual" name="planoAtual" required>
+                        <option value="">Selecione o plano atual</option>
+                        <option value="Plano Básico - R$ 249,00">Plano Básico - R$ 249,00</option>
+                        <option value="Plano Plus - R$ 339,00">Plano Plus - R$ 339,00</option>
+                        <option value="Plano Avançado - R$ 649,00">Plano Avançado - R$ 649,00</option>
+                        <option value="Plano Premium - R$ 899,00 + Wpp + Central de Atendimento">Plano Premium - R$ 899,00</option>
+                        <option value="Bot (Robô) de Atendimento Whatsapp + Avançado R$ 849,00">Bot de Atendimento Whatsapp + Avançado R$ 849,00</option>
+                        <option value="Bot (Robô) com Inteligência Artificial + Avançado R$ 1.949,00">Bot com Inteligência Artificial + Avançado R$ 1.949,00</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="novoPlano">Novo Plano Desejado: <span class="text-red-500">*</span></label>
+                    <select id="novoPlano" name="novoPlano" required>
+                        <option value="">Selecione o novo plano</option>
+                        <option value="Plano Básico - R$ 249,00">Plano Básico - R$ 249,00</option>
+                        <option value="Plano Plus - R$ 339,00">Plano Plus - R$ 339,00</option>
+                        <option value="Plano Avançado - R$ 649,00">Plano Avançado - R$ 649,00</option>
+                        <option value="Plano Premium - R$ 899,00 + Wpp + Central de Atendimento">Plano Premium - R$ 899,00</option>
+                        <option value="Bot (Robô) de Atendimento Whatsapp + Avançado R$ 849,00">Bot de Atendimento Whatsapp + Avançado R$ 849,00</option>
+                        <option value="Bot (Robô) com Inteligência Artificial + Avançado R$ 1.949,00">Bot com Inteligência Artificial + Avançado R$ 1.949,00</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="motivoAlteracao">Motivo da Alteração: <span class="text-red-500">*</span></label>
+                    <textarea id="motivoAlteracao" name="motivoAlteracao" required></textarea>
+                </div>
+            </div>
+
+            <button type="submit" class="btn">
+                Enviar Solicitação
+            </button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('cancelForm');
+            const tipoSolicitacaoRadios = document.querySelectorAll('input[name="tipoSolicitacao"]');
+            const motivoCancelamentoDiv = document.getElementById('motivoCancelamento');
+            const alteracaoPlanoDiv = document.getElementById('alteracaoPlano');
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+
+            // Mostrar/esconder campos baseado no tipo de solicitação
+            tipoSolicitacaoRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'cancelamento') {
+                        motivoCancelamentoDiv.classList.remove('hidden');
+                        alteracaoPlanoDiv.classList.add('hidden');
+                        // Remover required dos campos de alteração
+                        document.getElementById('planoAtual').required = false;
+                        document.getElementById('novoPlano').required = false;
+                        document.getElementById('motivoAlteracao').required = false;
+                        // Adicionar required ao campo de motivo
+                        document.getElementById('motivo').required = true;
+                    } else {
+                        motivoCancelamentoDiv.classList.add('hidden');
+                        alteracaoPlanoDiv.classList.remove('hidden');
+                        // Adicionar required aos campos de alteração
+                        document.getElementById('planoAtual').required = true;
+                        document.getElementById('novoPlano').required = true;
+                        document.getElementById('motivoAlteracao').required = true;
+                        // Remover required do campo de motivo
+                        document.getElementById('motivo').required = false;
+                    }
+                });
+            });
+
+            // Formatação do campo de WhatsApp
+            const whatsappInput = document.getElementById('whatsapp');
+            whatsappInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 11) value = value.substring(0, 11);
+                
+                if (value.length > 2) {
+                    value = '(' + value.substring(0, 2) + ') ' + value.substring(2);
+                }
+                if (value.length > 10) {
+                    value = value.substring(0, 10) + '-' + value.substring(10);
+                }
+                
+                e.target.value = value;
+            });
+
+            // Envio do formulário
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // Esconder mensagens anteriores
+                successMessage.style.display = 'none';
+                errorMessage.style.display = 'none';
+                
+                // Mostrar indicador de carregamento
+                const button = this.querySelector('button[type="submit"]');
+                const originalButtonText = button.innerHTML;
+                button.innerHTML = 'Enviando...';
+                button.disabled = true;
+                
+                // Coletar dados do formulário
+                const formData = {
+                    tipoSolicitacao: document.querySelector('input[name="tipoSolicitacao"]:checked').value,
+                    nome: document.getElementById('nome').value,
+                    email: document.getElementById('email').value,
+                    whatsapp: document.getElementById('whatsapp').value,
+                    timestamp: new Date().toISOString()
+                };
+
+                // Adicionar dados específicos baseado no tipo de solicitação
+                if (formData.tipoSolicitacao === 'cancelamento') {
+                    formData.motivo = document.getElementById('motivo').value;
+                } else {
+                    formData.planoAtual = document.getElementById('planoAtual').value;
+                    formData.novoPlano = document.getElementById('novoPlano').value;
+                    formData.motivoAlteracao = document.getElementById('motivoAlteracao').value;
+                }
+                
+                try {
+                    // Enviar para o webhook
+                    const response = await fetch('https://flow.elegis.com.br/webhook-test/95e2eb96-b8de-472e-9f7d-1f5fc49608d1', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(formData)
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Erro ao enviar o formulário');
+                    }
+                    
+                    // Mostrar mensagem de sucesso
+                    successMessage.style.display = 'block';
+                    form.reset();
+                    
+                } catch (error) {
+                    console.error('Erro:', error);
+                    errorMessage.style.display = 'block';
+                } finally {
+                    // Restaurar o botão
+                    button.innerHTML = originalButtonText;
+                    button.disabled = false;
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

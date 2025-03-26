@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trabalhe Conosco</title>
+    <style>
+        :root {
+            --primary-color: #003366;
+            --secondary-color: #0056b3;
+            --accent-color: #007bff;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --border-color: #dee2e6;
+            --success-color: #28a745;
+            --success-bg: #d4edda;
+            --gray-light: #f2f2f2;
+            --gray-medium: #e0e0e0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--gray-light);
+            color: #333;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 25px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .header h1 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-weight: 600;
+            font-size: 32px;
+        }
+        
+        .header p {
+            color: #555;
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+        
+        .form-group {
+            margin-bottom: 28px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: var(--dark-color);
+            font-size: 16px;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            background-color: #fcfcfc;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+            background-color: white;
+        }
+        
+        input[type="file"] {
+            padding: 12px;
+            background-color: var(--light-color);
+        }
+        
+        .required::after {
+            content: " *";
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 16px 28px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            display: block;
+            margin: 40px auto 0;
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 320px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        button:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .form-note {
+            font-size: 14px;
+            color: #6c757d;
+            margin-top: 8px;
+        }
+        
+        .success-message {
+            background-color: var(--success-bg);
+            color: var(--success-color);
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 30px;
+            display: none;
+            text-align: center;
+            font-weight: 500;
+            font-size: 18px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 30px;
+            display: none;
+            text-align: center;
+            font-weight: 500;
+            font-size: 18px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .form-section {
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .form-section:last-of-type {
+            border-bottom: none;
+        }
+        
+        .form-section-title {
+            font-size: 22px;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            padding-bottom: 12px;
+            border-bottom: 1px dashed var(--gray-medium);
+            font-weight: 600;
+        }
+        
+        .file-upload-wrapper {
+            position: relative;
+            margin-bottom: 10px;
+            background-color: var(--light-color);
+            border: 2px dashed #ccc;
+            padding: 30px;
+            text-align: center;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        .file-upload-wrapper:hover {
+            background-color: #e9ecef;
+            border-color: #adb5bd;
+        }
+        
+        .file-upload-wrapper::before {
+            content: "Arraste e solte seu arquivo aqui ou ";
+            display: block;
+            margin-bottom: 10px;
+            color: #6c757d;
+        }
+        
+        .required-note {
+            text-align: right;
+            font-size: 15px;
+            color: #6c757d;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 28px;
+            }
+            
+            button {
+                max-width: 100%;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .container {
+                padding: 25px 15px;
+                border-radius: 8px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .form-section-title {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Trabalhe Conosco</h1>
+            <p>Estamos sempre em busca de talentos! Preencha o formulário abaixo para enviar sua candidatura e fazer parte da nossa equipe.</p>
+        </div>
+        
+        <div class="success-message" id="successMessage">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 10px;">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            Sua candidatura foi enviada com sucesso! Agradecemos seu interesse. Entraremos em contato em breve.
+        </div>
+        
+        <div class="error-message" id="errorMessage">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 10px;">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <span id="errorText">Ocorreu um erro ao enviar sua candidatura. Por favor, tente novamente mais tarde.</span>
+        </div>
+        
+        <div class="required-note">* Campos de preenchimento obrigatório</div>
+        
+        <form id="jobApplicationForm" enctype="multipart/form-data">
+            <div class="form-section">
+                <div class="form-section-title">Informações Pessoais</div>
+                
+                <div class="form-group">
+                    <label for="name" class="required">Nome Completo</label>
+                    <input type="text" id="name" name="name" placeholder="Digite seu nome completo" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email" class="required">E-mail</label>
+                    <input type="email" id="email" name="email" placeholder="seu.email@exemplo.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="whatsapp" class="required">WhatsApp</label>
+                    <input type="tel" id="whatsapp" name="whatsapp" placeholder="(00) 00000-0000" required>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <div class="form-section-title">Currículo e Documentação</div>
+                
+                <div class="form-group">
+                    <label for="lattesUrl">Link do Currículo Lattes</label>
+                    <input type="url" id="lattesUrl" name="lattesUrl" placeholder="http://lattes.cnpq.br/...">
+                    <p class="form-note">Se você possui currículo na Plataforma Lattes, insira o link completo aqui.</p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="resume" class="required">Anexar Currículo</label>
+                    <div class="file-upload-wrapper">
+                        <input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx" required>
+                    </div>
+                    <p class="form-note">Formatos aceitos: PDF, DOC ou DOCX. Tamanho máximo: 5MB.</p>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <div class="form-section-title">Informações Adicionais</div>
+                
+                <div class="form-group">
+                    <label for="message">Mensagem Adicional</label>
+                    <textarea id="message" name="message" rows="6" placeholder="Conte-nos um pouco sobre você, suas experiências profissionais, habilidades e por que deseja trabalhar conosco..."></textarea>
+                </div>
+            </div>
+            
+            <button type="submit">
+                Enviar Candidatura
+            </button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('jobApplicationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Esconder mensagens anteriores
+            document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+            
+            // Mostrar indicador de carregamento
+            const button = this.querySelector('button[type="submit"]');
+            const originalButtonText = button.innerHTML;
+            button.innerHTML = 'Enviando...';
+            button.disabled = true;
+            
+            // Criar um objeto FormData com os dados do formulário
+            const formData = new FormData(this);
+            
+            // Adicionar informações sobre o arquivo
+            const fileInput = document.getElementById('resume');
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                // Adicionar metadados do arquivo como campos separados
+                formData.append('fileName', file.name);
+                formData.append('fileType', file.type);
+                formData.append('fileSize', file.size);
+            }
+            
+            // Enviar os dados para o webhook
+            fetch('https://flow.elegis.com.br/webhook-test/d41044a7-8b11-4014-8a19-a31e77e868ed', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro ao enviar o formulário. Status: ' + response.status);
+                }
+                return response.json().catch(() => ({})); // Se não for JSON, retorna objeto vazio
+            })
+            .then(data => {
+                console.log('Sucesso:', data);
+                // Mostrar mensagem de sucesso
+                document.getElementById('successMessage').style.display = 'block';
+                // Limpar o formulário
+                document.getElementById('jobApplicationForm').reset();
+                // Rolar para o topo para mostrar a mensagem de sucesso
+                window.scrollTo(0, 0);
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                // Mostrar mensagem de erro
+                document.getElementById('errorText').textContent = 'Ocorreu um erro ao enviar sua candidatura. Por favor, tente novamente mais tarde.';
+                document.getElementById('errorMessage').style.display = 'block';
+                // Rolar para o topo para mostrar a mensagem de erro
+                window.scrollTo(0, 0);
+            })
+            .finally(() => {
+                // Restaurar o botão
+                button.innerHTML = originalButtonText;
+                button.disabled = false;
+            });
+        });
+        
+        // Formatação do campo de WhatsApp
+        document.getElementById('whatsapp').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 11) value = value.slice(0, 11);
+            
+            if (value.length > 7) {
+                value = `(${value.slice(0, 2)}) ${value.slice(2, 7)}-${value.slice(7)}`;
+            } else if (value.length > 2) {
+                value = `(${value.slice(0, 2)}) ${value.slice(2)}`;
+            } else if (value.length > 0) {
+                value = `(${value}`;
+            }
+            
+            e.target.value = value;
+        });
+    </script>
+</body>
+</html> 

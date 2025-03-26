@@ -1,0 +1,1188 @@
+<!-- Formulário de Alinhamento de Demandas e Sugestões -->
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+/* Estilos CSS incorporados */
+/* Estilos Gerais */
+:root {
+    --primary-color: #3f51b5;
+    --primary-light: #757de8;
+    --primary-dark: #002984;
+    --secondary-color: #ff4081;
+    --secondary-light: #ff79b0;
+    --secondary-dark: #c60055;
+    --success-color: #4caf50;
+    --danger-color: #f44336;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+    --border-color: #e0e0e0;
+    --border-radius: 12px;
+    --box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+    --font-primary: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.elegis-container * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.elegis-container {
+    font-family: var(--font-primary);
+    line-height: 1.6;
+    color: #424242;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+    padding: 30px 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* Estilos do Formulário */
+.elegis-form-container {
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 40px;
+    margin-bottom: 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+.elegis-form-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+}
+
+.elegis-form-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 25px;
+    border-bottom: 2px solid var(--border-color);
+    position: relative;
+}
+
+.elegis-form-header::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    border-radius: 2px;
+}
+
+.elegis-form-header h1 {
+    color: var(--primary-color);
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.elegis-form-header h1 i {
+    color: var(--secondary-color);
+    margin-right: 10px;
+}
+
+.elegis-form-section {
+    margin-bottom: 40px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid var(--border-color);
+    position: relative;
+}
+
+.elegis-form-section:last-of-type {
+    border-bottom: none;
+}
+
+.elegis-form-section h2 {
+    color: var(--primary-color);
+    font-size: 24px;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+}
+
+.elegis-form-section h2 i {
+    margin-right: 12px;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.elegis-form-group {
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.elegis-form-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #424242;
+    font-size: 16px;
+}
+
+.elegis-required {
+    color: var(--danger-color);
+    margin-left: 4px;
+}
+
+.elegis-form-group input[type="text"],
+.elegis-form-group input[type="email"],
+.elegis-form-group input[type="tel"],
+.elegis-form-group input[type="date"],
+.elegis-form-group textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    transition: var(--transition);
+    background-color: #f9f9f9;
+}
+
+.elegis-form-group input[type="text"]:focus,
+.elegis-form-group input[type="email"]:focus,
+.elegis-form-group input[type="tel"]:focus,
+.elegis-form-group input[type="date"]:focus,
+.elegis-form-group textarea:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(63, 81, 181, 0.2);
+    background-color: white;
+}
+
+.elegis-form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+/* Estilos para Radio e Checkbox */
+.elegis-radio-group,
+.elegis-checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 5px 0;
+}
+
+.elegis-radio-option,
+.elegis-checkbox-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 15px;
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+}
+
+.elegis-radio-option:hover,
+.elegis-checkbox-option:hover {
+    background-color: rgba(63, 81, 181, 0.05);
+}
+
+.elegis-radio-option label,
+.elegis-checkbox-option label {
+    margin-bottom: 0;
+    font-weight: normal;
+    cursor: pointer;
+}
+
+.elegis-form-group input[type="radio"],
+.elegis-form-group input[type="checkbox"] {
+    margin-top: 4px;
+    cursor: pointer;
+    accent-color: var(--primary-color);
+    width: 18px;
+    height: 18px;
+}
+
+/* Estilos para o campo de arquivo */
+.elegis-file-input {
+    width: 100%;
+    padding: 15px;
+    border: 2px dashed var(--border-color);
+    border-radius: var(--border-radius);
+    background-color: #f9f9f9;
+    transition: var(--transition);
+    cursor: pointer;
+    text-align: center;
+}
+
+.elegis-file-input:hover {
+    border-color: var(--primary-color);
+    background-color: rgba(63, 81, 181, 0.05);
+}
+
+.elegis-file-preview {
+    margin-top: 15px;
+    min-height: 80px;
+    border: 1px dashed var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f9f9f9;
+}
+
+/* Estilos para campos ocultos */
+.elegis-hidden-input {
+    display: none;
+    margin-top: 12px;
+    margin-left: 30px;
+    animation: elegis-fadeIn 0.3s ease;
+}
+
+@keyframes elegis-fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Estilos para mensagens de erro */
+.elegis-error-message {
+    color: var(--danger-color);
+    font-size: 14px;
+    margin-top: 8px;
+    display: none;
+    font-weight: 500;
+    padding-left: 15px;
+    position: relative;
+}
+
+.elegis-error-message::before {
+    content: '\f071';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.elegis-error-message.visible {
+    display: block;
+    animation: elegis-fadeIn 0.3s ease;
+}
+
+/* Estilos para botões */
+.elegis-form-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+    gap: 20px;
+}
+
+.elegis-btn {
+    padding: 14px 28px;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.elegis-btn-primary {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: white;
+    box-shadow: 0 4px 10px rgba(63, 81, 181, 0.3);
+}
+
+.elegis-btn-primary:hover {
+    background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+    box-shadow: 0 6px 15px rgba(63, 81, 181, 0.4);
+    transform: translateY(-2px);
+}
+
+.elegis-btn-secondary {
+    background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+    color: #424242;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.elegis-btn-secondary:hover {
+    background: linear-gradient(135deg, #e0e0e0, #f5f5f5);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Estilos para o rodapé do formulário */
+.elegis-form-footer {
+    margin-top: 40px;
+    text-align: center;
+    color: #757575;
+    font-style: italic;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: var(--border-radius);
+}
+
+.elegis-form-footer i {
+    color: var(--secondary-color);
+    animation: elegis-pulse 1.5s infinite;
+}
+
+@keyframes elegis-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+/* Estilos para o modal */
+.elegis-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+}
+
+.elegis-modal-content {
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    padding: 40px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    position: relative;
+    animation: elegis-modalFadeIn 0.4s ease;
+}
+
+@keyframes elegis-modalFadeIn {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.elegis-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 28px;
+    cursor: pointer;
+    color: #757575;
+    transition: var(--transition);
+}
+
+.elegis-close:hover {
+    color: var(--danger-color);
+    transform: rotate(90deg);
+}
+
+.elegis-modal h2 {
+    color: var(--success-color);
+    margin-bottom: 20px;
+    font-size: 28px;
+}
+
+.elegis-modal h2 i {
+    font-size: 48px;
+    display: block;
+    margin-bottom: 15px;
+    animation: elegis-checkmark 0.5s ease-in-out;
+}
+
+@keyframes elegis-checkmark {
+    0% { transform: scale(0); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.elegis-modal p {
+    margin-bottom: 25px;
+    font-size: 18px;
+    color: #616161;
+}
+
+/* Estilos para validação */
+.elegis-invalid {
+    border-color: var(--danger-color) !important;
+    box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.2) !important;
+}
+
+.elegis-valid {
+    border-color: var(--success-color) !important;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2) !important;
+}
+
+.elegis-shake {
+    animation: elegis-shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes elegis-shake {
+    10%, 90% { transform: translate3d(-1px, 0, 0); }
+    20%, 80% { transform: translate3d(2px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+    40%, 60% { transform: translate3d(4px, 0, 0); }
+}
+
+.elegis-error-tooltip {
+    position: absolute;
+    background-color: var(--danger-color);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    animation: elegis-fadeIn 0.3s ease;
+}
+
+.elegis-error-tooltip::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 10px;
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid var(--danger-color);
+}
+
+.elegis-fade-out {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.elegis-file-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.elegis-file-info {
+    text-align: left;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .elegis-form-container {
+        padding: 30px 20px;
+    }
+    
+    .elegis-form-header h1 {
+        font-size: 26px;
+    }
+    
+    .elegis-form-section h2 {
+        font-size: 22px;
+    }
+    
+    .elegis-form-actions {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .elegis-btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .elegis-container {
+        padding: 15px 10px;
+    }
+    
+    .elegis-form-container {
+        padding: 25px 15px;
+    }
+    
+    .elegis-form-header h1 {
+        font-size: 24px;
+    }
+    
+    .elegis-form-section h2 {
+        font-size: 20px;
+    }
+    
+    .elegis-form-section h2 i {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+    }
+    
+    .elegis-form-group input[type="text"],
+    .elegis-form-group input[type="email"],
+    .elegis-form-group input[type="tel"],
+    .elegis-form-group input[type="date"],
+    .elegis-form-group textarea {
+        padding: 12px;
+        font-size: 15px;
+    }
+}
+</style>
+</head>
+<body>
+<!-- Carregando Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<div class="elegis-container">
+    <form id="elegisForm" class="elegis-form-container">
+        <div class="elegis-form-header">
+            <h1><i class="fas fa-lightbulb"></i> Formulário de Alinhamento de Demandas e Sugestões</h1>
+        </div>
+
+        <!-- Seção 1: Identificação do Cliente -->
+        <section class="elegis-form-section">
+            <h2><i class="fas fa-user"></i> 1. Identificação do Cliente</h2>
+            
+            <div class="elegis-form-group">
+                <label for="nomeCompleto">Nome Completo: <span class="elegis-required">*</span></label>
+                <input type="text" id="nomeCompleto" name="nomeCompleto" required>
+            </div>
+            
+            <div class="elegis-form-group">
+                <label for="empresa">Empresa/Organização:</label>
+                <input type="text" id="empresa" name="empresa">
+            </div>
+            
+            <div class="elegis-form-group">
+                <label for="cargo">Cargo ou Função:</label>
+                <input type="text" id="cargo" name="cargo">
+            </div>
+            
+            <div class="elegis-form-group">
+                <label for="whatsapp">WhatsApp: <span class="elegis-required">*</span></label>
+                <input type="tel" id="whatsapp" name="whatsapp" placeholder="Ex: (11) 98765-4321" required>
+            </div>
+            
+            <div class="elegis-form-group">
+                <label for="email">E-mail:</label>
+                <input type="email" id="email" name="email" placeholder="Ex: seu.email@exemplo.com">
+            </div>
+        </section>
+
+        <!-- Seção 2: Categorias da Demanda -->
+        <section class="elegis-form-section">
+            <h2><i class="fas fa-tags"></i> 2. Categorias da Demanda</h2>
+            
+            <div class="elegis-form-group">
+                <label>Selecione as categorias da sua demanda ou sugestão (pode escolher mais de uma): <span class="elegis-required">*</span></label>
+                
+                <div class="elegis-checkbox-group">
+                    <div class="elegis-checkbox-option">
+                        <input type="checkbox" id="cat1" name="categoria" value="Funcionalidades do Sistema" class="elegis-categoria-checkbox" required>
+                        <label for="cat1"><i class="fas fa-desktop"></i> Funcionalidades do Sistema</label>
+                    </div>
+                    
+                    <div class="elegis-checkbox-option">
+                        <input type="checkbox" id="cat2" name="categoria" value="Melhorias na Usabilidade" class="elegis-categoria-checkbox">
+                        <label for="cat2"><i class="fas fa-tools"></i> Melhorias na Usabilidade</label>
+                    </div>
+                    
+                    <div class="elegis-checkbox-option">
+                        <input type="checkbox" id="cat3" name="categoria" value="Relatórios e Dashboards" class="elegis-categoria-checkbox">
+                        <label for="cat3"><i class="fas fa-chart-bar"></i> Relatórios e Dashboards</label>
+                    </div>
+                    
+                    <div class="elegis-checkbox-option">
+                        <input type="checkbox" id="cat4" name="categoria" value="Segurança e Privacidade" class="elegis-categoria-checkbox">
+                        <label for="cat4"><i class="fas fa-lock"></i> Segurança e Privacidade</label>
+                    </div>
+                    
+                    <div class="elegis-checkbox-option">
+                        <input type="checkbox" id="cat5" name="categoria" value="Layout e Design" class="elegis-categoria-checkbox">
+                        <label for="cat5"><i class="fas fa-paint-brush"></i> Layout e Design</label>
+                    </div>
+                    
+                    <div class="elegis-checkbox-option">
+                        <input type="checkbox" id="cat6" name="categoria" value="Acesso via dispositivos móveis" class="elegis-categoria-checkbox">
+                        <label for="cat6"><i class="fas fa-mobile-alt"></i> Acesso via dispositivos móveis</label>
+                    </div>
+                    
+                    <div class="elegis-checkbox-option">
+                        <input type="checkbox" id="cat7" name="categoria" value="Integrações e Automatizações" class="elegis-categoria-checkbox">
+                        <label for="cat7"><i class="fas fa-cogs"></i> Integrações e Automatizações</label>
+                    </div>
+                    
+                    <div class="elegis-checkbox-option">
+                        <input type="checkbox" id="cat8" name="categoria" value="Comunicação e Suporte" class="elegis-categoria-checkbox">
+                        <label for="cat8"><i class="fas fa-comments"></i> Comunicação e Suporte</label>
+                    </div>
+                    
+                    <div class="elegis-checkbox-option">
+                        <input type="checkbox" id="cat9" name="categoria" value="Treinamentos e Materiais Educativos" class="elegis-categoria-checkbox">
+                        <label for="cat9"><i class="fas fa-book"></i> Treinamentos e Materiais Educativos</label>
+                    </div>
+                    
+                    <div class="elegis-checkbox-option">
+                        <input type="checkbox" id="cat10" name="categoria" value="Outras" class="elegis-categoria-checkbox">
+                        <label for="cat10"><i class="fas fa-rocket"></i> Outras (especifique)</label>
+                        <input type="text" id="outraCategoria" name="outraCategoria" class="elegis-hidden-input" placeholder="Especifique aqui">
+                    </div>
+                </div>
+                <div class="elegis-error-message" id="categoriaError">Por favor, selecione pelo menos uma categoria</div>
+            </div>
+        </section>
+
+        <!-- Seção 3: Detalhes da Demanda ou Ideia -->
+        <section class="elegis-form-section">
+            <h2><i class="fas fa-clipboard-list"></i> 3. Detalhes da Demanda ou Ideia</h2>
+            
+            <div class="elegis-form-group">
+                <label for="descricaoDemanda">Descreva detalhadamente a sua demanda, ideia ou expectativa: <span class="elegis-required">*</span></label>
+                <textarea id="descricaoDemanda" name="descricaoDemanda" rows="5" required></textarea>
+            </div>
+            
+            <div class="elegis-form-group">
+                <label for="importanciaDemanda">Por que essa demanda ou ideia é importante para você ou sua organização?</label>
+                <textarea id="importanciaDemanda" name="importanciaDemanda" rows="3"></textarea>
+            </div>
+            
+            <div class="elegis-form-group">
+                <label>Existe algum prazo específico ou urgência associada a essa demanda?</label>
+                
+                <div class="elegis-radio-group">
+                    <div class="elegis-radio-option">
+                        <input type="radio" id="prazo1" name="prazo" value="Sim, com data específica">
+                        <label for="prazo1">Sim, com data específica</label>
+                        <input type="date" id="dataPrazo" name="dataPrazo" class="elegis-hidden-input">
+                    </div>
+                    
+                    <div class="elegis-radio-option">
+                        <input type="radio" id="prazo2" name="prazo" value="Sim, quanto antes possível">
+                        <label for="prazo2">Sim, quanto antes possível</label>
+                    </div>
+                    
+                    <div class="elegis-radio-option">
+                        <input type="radio" id="prazo3" name="prazo" value="Não há prazo definido">
+                        <label for="prazo3">Não há prazo definido</label>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção 4: Impacto Esperado -->
+        <section class="elegis-form-section">
+            <h2><i class="fas fa-chart-line"></i> 4. Impacto Esperado</h2>
+            
+            <div class="elegis-form-group">
+                <label for="impactoTrabalho">Como você acredita que a implementação dessa demanda ou sugestão impactará seu trabalho?</label>
+                <input type="text" id="impactoTrabalho" name="impactoTrabalho">
+            </div>
+            
+            <div class="elegis-form-group">
+                <label>Essa sugestão beneficiaria mais clientes além de você?</label>
+                
+                <div class="elegis-radio-group">
+                    <div class="elegis-radio-option">
+                        <input type="radio" id="beneficio1" name="beneficio" value="Sim, beneficiaria muitos outros usuários">
+                        <label for="beneficio1">Sim, beneficiaria muitos outros usuários</label>
+                    </div>
+                    
+                    <div class="elegis-radio-option">
+                        <input type="radio" id="beneficio2" name="beneficio" value="Talvez alguns poucos usuários">
+                        <label for="beneficio2">Talvez alguns poucos usuários</label>
+                    </div>
+                    
+                    <div class="elegis-radio-option">
+                        <input type="radio" id="beneficio3" name="beneficio" value="Provavelmente apenas minha necessidade específica">
+                        <label for="beneficio3">Provavelmente apenas minha necessidade específica</label>
+                    </div>
+                    
+                    <div class="elegis-radio-option">
+                        <input type="radio" id="beneficio4" name="beneficio" value="Não tenho certeza">
+                        <label for="beneficio4">Não tenho certeza</label>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção 5: Anexos -->
+        <section class="elegis-form-section">
+            <h2><i class="fas fa-paperclip"></i> 5. Anexos</h2>
+            
+            <div class="elegis-form-group">
+                <label for="anexo">Deseja enviar algum arquivo ou imagem para complementar a sua sugestão?</label>
+                <input type="file" id="anexo" name="anexo" class="elegis-file-input">
+                <div class="elegis-file-preview" id="filePreview"></div>
+            </div>
+        </section>
+
+        <!-- Seção 6: Preferências de Acompanhamento -->
+        <section class="elegis-form-section">
+            <h2><i class="fas fa-bell"></i> 6. Preferências de Acompanhamento</h2>
+            
+            <div class="elegis-form-group">
+                <label>Você gostaria de ser informado(a) sobre o andamento desta demanda?</label>
+                
+                <div class="elegis-checkbox-group">
+                    <div class="elegis-checkbox-option">
+                        <input type="checkbox" id="acompanhamento1" name="acompanhamento" value="Email">
+                        <label for="acompanhamento1">Sim, quero atualizações periódicas por e-mail.</label>
+                    </div>
+                    
+                    <div class="elegis-checkbox-option">
+                        <input type="checkbox" id="acompanhamento2" name="acompanhamento" value="WhatsApp">
+                        <label for="acompanhamento2">Sim, quero ser informado via WhatsApp.</label>
+                    </div>
+                    
+                    <div class="elegis-checkbox-option">
+                        <input type="checkbox" id="acompanhamento3" name="acompanhamento" value="Não">
+                        <label for="acompanhamento3">Não, apenas desejo registrar minha demanda.</label>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção 7: Comentários Adicionais -->
+        <section class="elegis-form-section">
+            <h2><i class="fas fa-comment-alt"></i> 7. Comentários Adicionais</h2>
+            
+            <div class="elegis-form-group">
+                <label for="comentariosAdicionais">Há algo mais que você gostaria de compartilhar conosco?</label>
+                <textarea id="comentariosAdicionais" name="comentariosAdicionais" rows="3"></textarea>
+            </div>
+        </section>
+
+        <!-- Botões de Ação -->
+        <div class="elegis-form-actions">
+            <button type="button" id="resetBtn" class="elegis-btn elegis-btn-secondary">
+                <i class="fas fa-undo-alt"></i> Limpar Formulário
+            </button>
+            <button type="submit" id="submitBtn" class="elegis-btn elegis-btn-primary">
+                <i class="fas fa-paper-plane"></i> Enviar Demanda
+            </button>
+        </div>
+
+        <div class="elegis-form-footer">
+            <p>Suas sugestões são muito importantes para nós! <i class="fas fa-heart"></i></p>
+        </div>
+    </form>
+
+    <!-- Modal de Confirmação -->
+    <div id="confirmationModal" class="elegis-modal">
+        <div class="elegis-modal-content">
+            <span class="elegis-close">&times;</span>
+            <h2><i class="fas fa-check-circle"></i> Demanda Enviada!</h2>
+            <p>Sua demanda foi registrada com sucesso. Agradecemos por compartilhar suas ideias conosco!</p>
+            <button id="closeModalBtn" class="elegis-btn elegis-btn-primary">Fechar</button>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript incorporado -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Elementos do formulário
+    const form = document.getElementById('elegisForm');
+    const resetBtn = document.getElementById('resetBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const modal = document.getElementById('confirmationModal');
+    const closeModal = document.querySelector('.elegis-close');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const fileInput = document.getElementById('anexo');
+    const filePreview = document.getElementById('filePreview');
+    const categoriaCheckboxes = document.querySelectorAll('.elegis-categoria-checkbox');
+    const outraCategoriaInput = document.getElementById('outraCategoria');
+    const categoriaError = document.getElementById('categoriaError');
+    
+    // Webhook URL - SUBSTITUA ESTA URL PELO SEU WEBHOOK
+    const WEBHOOK_URL = 'https://webhook.elegis.com.br/webhook/fbd9f4be-86bd-4954-8b1d-0554a2b3efb5';
+    
+    // Mostrar campo de texto para "Outras categorias" quando selecionado
+    document.getElementById('cat10').addEventListener('change', function() {
+        if (this.checked) {
+            outraCategoriaInput.style.display = 'block';
+        } else {
+            outraCategoriaInput.style.display = 'none';
+            outraCategoriaInput.value = '';
+        }
+    });
+    
+    // Mostrar campo de data quando "Sim, com data específica" é selecionado
+    document.getElementById('prazo1').addEventListener('change', function() {
+        if (this.checked) {
+            document.getElementById('dataPrazo').style.display = 'block';
+        } else {
+            document.getElementById('dataPrazo').style.display = 'none';
+        }
+    });
+    
+    // Validação de categorias
+    function validateCategorias() {
+        const isChecked = Array.from(categoriaCheckboxes).some(checkbox => checkbox.checked);
+        if (!isChecked) {
+            categoriaError.classList.add('visible');
+            return false;
+        } else {
+            categoriaError.classList.remove('visible');
+            return true;
+        }
+    }
+    
+    // Adicionar evento de mudança para cada checkbox de categoria
+    categoriaCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', validateCategorias);
+    });
+    
+    // Validação de WhatsApp
+    function validateWhatsApp(whatsapp) {
+        const phoneRegex = /^[0-9\s\(\)\+\-]{10,15}$/;
+        return phoneRegex.test(whatsapp);
+    }
+    
+    // Validação de Email (opcional)
+    function validateEmail(email) {
+        if (!email) return true; // Email é opcional
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+    
+    // Visualização prévia de arquivo
+    fileInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) {
+            filePreview.innerHTML = '';
+            return;
+        }
+        
+        const fileSize = (file.size / 1024 / 1024).toFixed(2); // em MB
+        
+        filePreview.innerHTML = `
+            <div class="elegis-file-item">
+                <i class="fas fa-file"></i>
+                <div class="elegis-file-info">
+                    <strong>${file.name}</strong>
+                    <div>${fileSize} MB</div>
+                </div>
+            </div>
+        `;
+    });
+    
+    // Limpar formulário
+    resetBtn.addEventListener('click', function() {
+        form.reset();
+        filePreview.innerHTML = '';
+        document.getElementById('dataPrazo').style.display = 'none';
+        outraCategoriaInput.style.display = 'none';
+        categoriaError.classList.remove('visible');
+        
+        // Remover classes de validação
+        const inputs = form.querySelectorAll('input, textarea');
+        inputs.forEach(input => {
+            input.classList.remove('elegis-valid', 'elegis-invalid');
+        });
+    });
+    
+    // Fechar modal
+    function closeModalFunction() {
+        modal.style.display = 'none';
+    }
+    
+    closeModal.addEventListener('click', closeModalFunction);
+    closeModalBtn.addEventListener('click', closeModalFunction);
+    
+    window.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeModalFunction();
+        }
+    });
+    
+    // Enviar formulário
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Validar categorias
+        if (!validateCategorias()) {
+            return;
+        }
+        
+        // Validar WhatsApp
+        const whatsapp = document.getElementById('whatsapp').value;
+        if (!validateWhatsApp(whatsapp)) {
+            document.getElementById('whatsapp').classList.add('elegis-invalid');
+            document.getElementById('whatsapp').classList.add('elegis-shake');
+            setTimeout(() => {
+                document.getElementById('whatsapp').classList.remove('elegis-shake');
+            }, 500);
+            return;
+        }
+        
+        // Validar Email (opcional)
+        const email = document.getElementById('email').value;
+        if (email && !validateEmail(email)) {
+            document.getElementById('email').classList.add('elegis-invalid');
+            document.getElementById('email').classList.add('elegis-shake');
+            setTimeout(() => {
+                document.getElementById('email').classList.remove('elegis-shake');
+            }, 500);
+            return;
+        }
+        
+        // Validar data de prazo se selecionado
+        if (document.getElementById('prazo1').checked && !document.getElementById('dataPrazo').value) {
+            document.getElementById('dataPrazo').classList.add('elegis-invalid');
+            document.getElementById('dataPrazo').classList.add('elegis-shake');
+            document.getElementById('dataPrazo').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('dataPrazo').classList.remove('elegis-shake');
+            }, 500);
+            return;
+        }
+        
+        // Desabilitar botão de envio
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+        
+        try {
+            // Coletar categorias selecionadas
+            const categoriasSelecionadas = [];
+            categoriaCheckboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    if (checkbox.value === 'Outras') {
+                        categoriasSelecionadas.push(`Outras: ${outraCategoriaInput.value}`);
+                    } else {
+                        categoriasSelecionadas.push(checkbox.value);
+                    }
+                }
+            });
+            
+            // Coletar preferências de acompanhamento
+            const acompanhamentoSelecionado = Array.from(document.querySelectorAll('input[name="acompanhamento"]:checked')).map(el => el.value);
+            
+            // Criar FormData para enviar dados e arquivo
+            const formData = new FormData();
+            
+            // Adicionar todos os campos do formulário individualmente
+            formData.append('timestamp', new Date().toISOString());
+            formData.append('nome', document.getElementById('nomeCompleto').value || "");
+            formData.append('empresa', document.getElementById('empresa').value || "");
+            formData.append('cargo', document.getElementById('cargo').value || "");
+            formData.append('whatsapp', whatsapp || "");
+            formData.append('email', email || "");
+            
+            // Adicionar categorias como campos individuais
+            categoriasSelecionadas.forEach((categoria, index) => {
+                formData.append(`categoria_${index}`, categoria);
+            });
+            formData.append('categorias_count', categoriasSelecionadas.length);
+            
+            formData.append('descricao', document.getElementById('descricaoDemanda').value || "");
+            formData.append('importancia', document.getElementById('importanciaDemanda').value || "");
+            
+            const prazoSelecionado = document.querySelector('input[name="prazo"]:checked');
+            formData.append('prazo', prazoSelecionado ? prazoSelecionado.value : "");
+            
+            // Tratar o campo de data de prazo
+            const dataPrazoValue = document.getElementById('dataPrazo').value;
+            if (prazoSelecionado && prazoSelecionado.id === 'prazo1' && dataPrazoValue) {
+                // Formatar a data para ISO string para evitar problemas com formatos locais
+                try {
+                    const dataParts = dataPrazoValue.split('-');
+                    if (dataParts.length === 3) {
+                        const year = parseInt(dataParts[0]);
+                        const month = parseInt(dataParts[1]) - 1; // Mês em JavaScript é 0-indexed
+                        const day = parseInt(dataParts[2]);
+                        const formattedDate = new Date(year, month, day).toISOString().split('T')[0];
+                        formData.append('dataPrazo', formattedDate);
+                    } else {
+                        formData.append('dataPrazo', dataPrazoValue);
+                    }
+                } catch (e) {
+                    console.error('Erro ao formatar data:', e);
+                    formData.append('dataPrazo', dataPrazoValue);
+                }
+            } else {
+                formData.append('dataPrazo', "");
+            }
+            
+            formData.append('impactoTrabalho', document.getElementById('impactoTrabalho').value || "");
+            
+            const beneficioSelecionado = document.querySelector('input[name="beneficio"]:checked');
+            formData.append('beneficio', beneficioSelecionado ? beneficioSelecionado.value : "");
+            
+            // Adicionar acompanhamento como campos individuais
+            acompanhamentoSelecionado.forEach((acompanhamento, index) => {
+                formData.append(`acompanhamento_${index}`, acompanhamento);
+            });
+            formData.append('acompanhamento_count', acompanhamentoSelecionado.length);
+            
+            formData.append('comentariosAdicionais', document.getElementById('comentariosAdicionais').value || "");
+            
+            // Adicionar o arquivo se existir
+            if (fileInput.files && fileInput.files[0]) {
+                try {
+                    const file = fileInput.files[0];
+                    // Sanitizar o nome do arquivo para evitar problemas com caracteres especiais
+                    const fileName = file.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                    
+                    formData.append('anexo', file);
+                    formData.append('tem_anexo', 'sim');
+                    formData.append('nome_arquivo', fileName);
+                    formData.append('tipo_arquivo', file.type);
+                    formData.append('tamanho_arquivo', file.size);
+                } catch (error) {
+                    console.error('Erro ao processar arquivo:', error);
+                    formData.append('tem_anexo', 'nao');
+                    formData.append('erro_arquivo', error.message);
+                }
+            } else {
+                formData.append('tem_anexo', 'nao');
+            }
+            
+            // Também adicionar todos os dados como JSON em um único campo (backup)
+            const dataToSend = {
+                timestamp: new Date().toISOString(),
+                nome: document.getElementById('nomeCompleto').value || "",
+                empresa: document.getElementById('empresa').value || "",
+                cargo: document.getElementById('cargo').value || "",
+                whatsapp: whatsapp || "",
+                email: email || "",
+                categorias: categoriasSelecionadas,
+                descricao: document.getElementById('descricaoDemanda').value || "",
+                importancia: document.getElementById('importanciaDemanda').value || "",
+                prazo: prazoSelecionado ? prazoSelecionado.value : "",
+                dataPrazo: dataPrazoValue ? dataPrazoValue : "",
+                impactoTrabalho: document.getElementById('impactoTrabalho').value || "",
+                beneficio: beneficioSelecionado ? beneficioSelecionado.value : "",
+                acompanhamento: acompanhamentoSelecionado,
+                comentariosAdicionais: document.getElementById('comentariosAdicionais').value || ""
+            };
+            
+            // Se houver arquivo, adicionar informações sobre ele
+            if (fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                const fileName = file.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                
+                dataToSend.anexo = {
+                    nome: fileName,
+                    tipo: file.type,
+                    tamanho: file.size
+                };
+                dataToSend.tem_anexo = true;
+            } else {
+                dataToSend.tem_anexo = false;
+            }
+            
+            formData.append('dados_json', JSON.stringify(dataToSend));
+            
+            // Enviar com FormData - usando o método POST diretamente
+            fetch('https://webhook.elegis.com.br/webhook/fbd9f4be-86bd-4954-8b1d-0554a2b3efb5', {
+                method: 'POST',
+                mode: 'no-cors',
+                body: formData
+            })
+            .then(response => {
+                // Como estamos usando no-cors, não podemos ler a resposta
+                // Então assumimos que foi bem-sucedido
+                showSuccess();
+            })
+            .catch(error => {
+                console.error('Erro ao enviar:', error);
+                showError(error);
+                // Se falhar, tentar a opção 2 (enviar para o Google Drive)
+                enviarParaGoogleDrive(dataToSend, fileInput.files[0]);
+            })
+            .finally(() => {
+                resetSubmitButton();
+            });
+            
+        } catch (error) {
+            console.error('Erro ao processar formulário:', error);
+            alert('Ocorreu um erro ao processar o formulário. Por favor, tente novamente.');
+            resetSubmitButton();
+        }
+        
+        // Função para mostrar sucesso
+        function showSuccess() {
+            modal.style.display = 'flex';
+            form.reset();
+            filePreview.innerHTML = '';
+            document.getElementById('dataPrazo').style.display = 'none';
+            outraCategoriaInput.style.display = 'none';
+            
+            // Remover classes de validação
+            const inputs = form.querySelectorAll('input, textarea');
+            inputs.forEach(input => {
+                input.classList.remove('elegis-valid', 'elegis-invalid');
+            });
+        }
+        
+        // Função para mostrar erro
+        function showError(error) {
+            console.error('Erro:', error);
+            alert('Ocorreu um erro ao enviar sua demanda. Por favor, tente novamente mais tarde.');
+        }
+        
+        // Função para resetar o botão de envio
+        function resetSubmitButton() {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar Demanda';
+        }
+        
+        // Função para enviar para o Google Drive (opção alternativa)
+        function enviarParaGoogleDrive(dados, arquivo) {
+            if (!arquivo) return;
+            
+            try {
+                // Sanitizar o nome do arquivo para evitar problemas com caracteres especiais
+                const fileName = arquivo.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                
+                // Criar um identificador único para o arquivo
+                const timestamp = new Date().getTime();
+                const nomeUsuario = dados.nome.replace(/[^a-zA-Z0-9]/g, '_');
+                const identificador = `${timestamp}_${nomeUsuario}`;
+                
+                // Criar FormData para enviar para o Google Drive
+                const driveFormData = new FormData();
+                driveFormData.append('file', arquivo);
+                driveFormData.append('file_name', fileName);
+                driveFormData.append('identificador', identificador);
+                driveFormData.append('nome_usuario', dados.nome);
+                driveFormData.append('email', dados.email);
+                driveFormData.append('whatsapp', dados.whatsapp);
+                driveFormData.append('timestamp', dados.timestamp);
+                
+                // URL do webhook para o Google Drive (você precisará configurar isso)
+                const GOOGLE_DRIVE_WEBHOOK = 'https://webhook.elegis.com.br/webhook-drive/fbd9f4be-86bd-4954-8b1d-0554a2b3efb5';
+                
+                fetch(GOOGLE_DRIVE_WEBHOOK, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: driveFormData
+                })
+                .then(() => {
+                    console.log('Arquivo enviado para o Google Drive com sucesso');
+                })
+                .catch(error => {
+                    console.error('Erro ao enviar para o Google Drive:', error);
+                });
+            } catch (error) {
+                console.error('Erro ao processar arquivo para Google Drive:', error);
+            }
+        }
+    });
+});
+</script>
+</body>
+</html>

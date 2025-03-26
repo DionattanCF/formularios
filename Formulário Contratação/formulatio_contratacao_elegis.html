@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Contratação - Sistema Elegis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3f51b5;
+            --primary-light: #757de8;
+            --primary-dark: #002984;
+            --secondary-color: #ff4081;
+            --secondary-light: #ff79b0;
+            --secondary-dark: #c60055;
+            --success-color: #4caf50;
+            --danger-color: #f44336;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --border-color: #e0e0e0;
+            --border-radius: 12px;
+            --box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --font-primary: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background-color: var(--border-color);
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .progress {
+            height: 8px;
+            background-color: var(--primary-color);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .alert {
+            padding: 0.75rem 1.25rem;
+            margin-bottom: 1rem;
+            border-radius: var(--border-radius);
+        }
+
+        .alert-danger {
+            color: var(--danger-color);
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .summary-item .label {
+            font-weight: 500;
+            color: #4a5568;
+        }
+
+        .summary-item .value {
+            color: #2d3748;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-left-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .bg-white {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 40px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .bg-white::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .text-2xl {
+            color: var(--primary-color);
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .text-lg {
+            color: var(--primary-color);
+            font-size: 24px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .text-lg i {
+            margin-right: 12px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .form-step input[type="text"],
+        .form-step input[type="email"],
+        .form-step input[type="tel"],
+        .form-step input[type="date"],
+        .form-step textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            transition: var(--transition);
+            background-color: #f9f9f9;
+        }
+
+        .form-step input[type="text"]:focus,
+        .form-step input[type="email"]:focus,
+        .form-step input[type="tel"]:focus,
+        .form-step input[type="date"]:focus,
+        .form-step textarea:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(63, 81, 181, 0.2);
+            background-color: white;
+        }
+
+        .form-step textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-step .flex {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            gap: 20px;
+        }
+
+        .form-step .bg-indigo-600 {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            box-shadow: 0 4px 10px rgba(63, 81, 181, 0.3);
+        }
+
+        .form-step .bg-indigo-600:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+            box-shadow: 0 6px 15px rgba(63, 81, 181, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .form-step .bg-gray-200 {
+            background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+            color: #424242;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-step .bg-gray-200:hover {
+            background: linear-gradient(135deg, #e0e0e0, #f5f5f5);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .form-step .bg-green-600 {
+            background: linear-gradient(135deg, var(--success-color), var(--success-color));
+            color: white;
+            box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+        }
+
+        .form-step .bg-green-600:hover {
+            background: linear-gradient(135deg, var(--success-color), var(--success-color));
+            box-shadow: 0 6px 15px rgba(76, 175, 80, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .form-step .text-center {
+            text-align: center;
+            color: #757575;
+            font-style: italic;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: var(--border-radius);
+        }
+
+        .form-step .text-center i {
+            color: var(--secondary-color);
+            animation: elegis-pulse 1.5s infinite;
+        }
+
+        @keyframes elegis-pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .form-step .elegis-invalid {
+            border-color: var(--danger-color) !important;
+            box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.2) !important;
+        }
+
+        .form-step .elegis-valid {
+            border-color: var(--success-color) !important;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2) !important;
+        }
+
+        .form-step .elegis-shake {
+            animation: elegis-shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes elegis-shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        .form-step .elegis-error-tooltip {
+            position: absolute;
+            background-color: var(--danger-color);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            animation: elegis-fadeIn 0.3s ease;
+        }
+
+        .form-step .elegis-error-tooltip::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: 10px;
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 6px solid var(--danger-color);
+        }
+
+        .form-step .elegis-fade-out {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .form-step .elegis-file-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .form-step .elegis-file-info {
+            text-align: left;
+        }
+
+        .form-step .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .form-step .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-step .radio-option input {
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .bg-white {
+                padding: 30px 20px;
+            }
+
+            .text-2xl {
+                font-size: 26px;
+            }
+
+            .text-lg {
+                font-size: 22px;
+            }
+
+            .form-step .flex {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 flex flex-col items-center justify-center min-h-screen p-4">
+    <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg w-full max-w-md border border-gray-100">
+        
+        <h2 class="text-2xl font-bold mb-4 text-center text-gray-800">Contrato Sistema Elegis</h2>
+        
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        
+        <form id="contractForm" class="space-y-5">
+            <!-- Passo 1: Tipo de Contrato -->
+            <div class="form-step active" id="step1">
+                <h3 class="text-lg font-semibold mb-4">Tipo de Contrato</h3>
+                <p class="text-gray-600 mb-4">Informe se o contrato é para empresa, Partido Político ou Pessoa Física</p>
+                
+                <div id="alertTipoContrato" class="alert alert-danger hidden">
+                    Por favor, selecione o tipo de contrato para continuar.
+                </div>
+                
+                <div class="radio-group space-y-3">
+                    <label class="radio-option">
+                        <input type="radio" name="tipoContrato" value="Pessoa Física" class="h-5 w-5" required>
+                        <span>Pessoa Física</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="tipoContrato" value="Pessoa Jurídica" class="h-5 w-5">
+                        <span>Pessoa Jurídica</span>
+                    </label>
+                </div>
+                
+                <div class="flex justify-end mt-6">
+                    <button type="button" class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-indigo-700" onclick="nextStep(1)">
+                        Próximo
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Passo 2: Plano Escolhido -->
+            <div class="form-step" id="step2">
+                <h3 class="text-lg font-semibold mb-4">Plano Escolhido</h3>
+                <p class="text-gray-600 mb-4">Escolha um dos Planos mensais abaixo</p>
+                
+                <div id="alertPlano" class="alert alert-danger hidden">
+                    Por favor, selecione um plano para continuar.
+                </div>
+                
+                <div class="radio-group space-y-3">
+                    <label class="radio-option">
+                        <input type="radio" name="plano" value="Plano Básico - R$ 249,00" class="h-5 w-5" required>
+                        <span>Plano Básico - R$ 249,00</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="plano" value="Plano Plus - R$ 339,00" class="h-5 w-5">
+                        <span>Plano Plus - R$ 339,00</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="plano" value="Plano Avançado - R$ 649,00" class="h-5 w-5">
+                        <span>Plano Avançado - R$ 649,00</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="plano" value="Plano Premium - R$ 899,00 + Wpp + Central de Atendimento" class="h-5 w-5">
+                        <span>Plano Premium - R$ 899,00</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="plano" value="Bot (Robô) de Atendimento Whatsapp + Avançado R$ 849,00" class="h-5 w-5">
+                        <span>Bot de Atendimento Whatsapp + Avançado R$ 849,00</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="plano" value="Bot (Robô) com Inteligência Artificial + Avançado R$ 1.949,00" class="h-5 w-5">
+                        <span>Bot com Inteligência Artificial + Avançado R$ 1.949,00</span>
+                    </label>
+                </div>
+                
+                <div class="flex justify-between mt-6">
+                    <button type="button" class="bg-gray-200 text-gray-800 px-6 py-2 rounded-lg font-medium hover:bg-gray-300" onclick="prevStep(2)">
+                        Anterior
+                    </button>
+                    <button type="button" class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-indigo-700" onclick="nextStep(2)">
+                        Próximo
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Passo 3: Forma de Pagamento -->
+            <div class="form-step" id="step3">
+                <h3 class="text-lg font-semibold mb-4">Forma de Pagamento</h3>
+                
+                <div id="alertPagamento" class="alert alert-danger hidden">
+                    Por favor, selecione uma forma de pagamento para continuar.
+                </div>
+                
+                <div class="space-y-3">
+                    <label class="flex items-center space-x-3">
+                        <input type="radio" name="formaPagamento" value="Pix" class="h-5 w-5" required>
+                        <span>Pix</span>
+                    </label>
+                    <label class="flex items-center space-x-3">
+                        <input type="radio" name="formaPagamento" value="Boleto" class="h-5 w-5">
+                        <span>Boleto</span>
+                    </label>
+                    <label class="flex items-center space-x-3">
+                        <input type="radio" name="formaPagamento" value="Cartão de Crédito" class="h-5 w-5">
+                        <span>Cartão de Crédito</span>
+                    </label>
+                </div>
+                
+                <div class="flex justify-between mt-6">
+                    <button type="button" class="bg-gray-200 text-gray-800 px-6 py-2 rounded-lg font-medium hover:bg-gray-300" onclick="prevStep(3)">
+                        Anterior
+                    </button>
+                    <button type="button" class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-indigo-700" onclick="nextStep(3)">
+                        Próximo
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Passo 4: Dados Pessoais -->
+            <div class="form-step" id="step4">
+                <h3 class="text-lg font-semibold mb-4">Dados Pessoais</h3>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block mb-2 font-medium">Nome Completo</label>
+                        <input type="text" id="nome" name="nome" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                    </div>
+                    
+                    <div>
+                        <label class="block mb-2 font-medium">Email (Master do sistema)</label>
+                        <input type="email" id="email" name="email" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                    </div>
+                    
+                    <div>
+                        <label class="block mb-2 font-medium">Atividade Profissional</label>
+                        <input type="text" id="atividade" name="atividade" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                    </div>
+                    
+                    <div>
+                        <label class="block mb-2 font-medium">Estado Civil</label>
+                        <select id="estadoCivil" name="estadoCivil" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                            <option value="">Selecione</option>
+                            <option value="Casado">Casado</option>
+                            <option value="Casada">Casada</option>
+                            <option value="Separado Judicialmente">Separado Judicialmente</option>
+                            <option value="Solteiro">Solteiro</option>
+                            <option value="Solteira">Solteira</option>
+                            <option value="Viúvo">Viúvo</option>
+                            <option value="Viúva">Viúva</option>
+                            <option value="Convivente">Convivente</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block mb-2 font-medium">Naturalidade</label>
+                        <input type="text" id="naturalidade" name="naturalidade" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between mt-6">
+                    <button type="button" class="bg-gray-200 text-gray-800 px-6 py-2 rounded-lg font-medium hover:bg-gray-300" onclick="prevStep(4)">
+                        Anterior
+                    </button>
+                    <button type="button" class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-indigo-700" onclick="nextStep(4)">
+                        Próximo
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Passo 5: Mais Dados Pessoais -->
+            <div class="form-step" id="step5">
+                <h3 class="text-lg font-semibold mb-4">Dados Pessoais (continuação)</h3>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block mb-2 font-medium">N° Celular com WhatsApp</label>
+                        <input type="tel" id="celular" name="celular" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="(##) #####-####" maxlength="15" required>
+                    </div>
+                    
+                    <div>
+                        <label class="block mb-2 font-medium">Número do RG</label>
+                        <input type="text" id="rg" name="rg" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                    </div>
+                    
+                    <div>
+                        <label class="block mb-2 font-medium">Número do CPF</label>
+                        <input type="text" id="cpf" name="cpf" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="###.###.###-##" maxlength="14" required>
+                    </div>
+                    
+                    <div>
+                        <label class="block mb-2 font-medium">Número do Título Eleitoral (Para casos Eleitorais)</label>
+                        <input type="text" id="tituloEleitoral" name="tituloEleitoral" class="w-full p-3 border border-gray-300 rounded-lg">
+                    </div>
+                </div>
+                
+                <div class="flex justify-between mt-6">
+                    <button type="button" class="bg-gray-200 text-gray-800 px-6 py-2 rounded-lg font-medium hover:bg-gray-300" onclick="prevStep(5)">
+                        Anterior
+                    </button>
+                    <button type="button" class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-indigo-700" onclick="nextStep(5)">
+                        Próximo
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Passo 6: Endereço e Data -->
+            <div class="form-step" id="step6">
+                <h3 class="text-lg font-semibold mb-4">Endereço e Data do Contrato</h3>
+                
+                <div class="space-y-4">
+                    <div class="relative">
+                        <label class="block mb-2 font-medium">CEP</label>
+                        <div class="flex items-center">
+                            <input type="text" id="cep" name="cep" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="#####-###" maxlength="9" required>
+                            <div id="cepSpinner" class="loading-spinner ml-2 hidden"></div>
+                        </div>
+                        <div id="cepError" class="text-red-500 text-sm mt-1 hidden">CEP não encontrado. Verifique o número.</div>
+                    </div>
+                    
+                    <div>
+                        <label class="block mb-2 font-medium">Rua</label>
+                        <input type="text" id="rua" name="rua" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block mb-2 font-medium">Número</label>
+                            <input type="text" id="numero" name="numero" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                        </div>
+                        <div>
+                            <label class="block mb-2 font-medium">Complemento</label>
+                            <input type="text" id="complemento" name="complemento" class="w-full p-3 border border-gray-300 rounded-lg">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block mb-2 font-medium">Bairro</label>
+                        <input type="text" id="bairro" name="bairro" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block mb-2 font-medium">Cidade</label>
+                            <input type="text" id="cidade" name="cidade" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                        </div>
+                        <div>
+                            <label class="block mb-2 font-medium">Estado</label>
+                            <input type="text" id="uf" name="uf" class="w-full p-3 border border-gray-300 rounded-lg" maxlength="2" required>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block mb-2 font-medium">Data do Contrato</label>
+                        <input type="date" id="dataContrato" name="dataContrato" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between mt-6">
+                    <button type="button" class="bg-gray-200 text-gray-800 px-6 py-2 rounded-lg font-medium hover:bg-gray-300" onclick="prevStep(6)">
+                        Anterior
+                    </button>
+                    <button type="button" class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-indigo-700" onclick="showConfirmation()">
+                        Revisar Dados
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Passo 7: Confirmação -->
+            <div class="form-step" id="step7">
+                <h3 class="text-lg font-semibold mb-4">Confirmação dos Dados</h3>
+                <p class="text-gray-600 mb-4">Por favor, revise todos os dados abaixo antes de enviar:</p>
+                
+                <div class="bg-gray-50 p-4 rounded-lg space-y-3 my-4 max-h-80 overflow-y-auto">
+                    <div id="dadosConfirmacao" class="space-y-3">
+                        <!-- Os dados serão inseridos dinamicamente via JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="flex justify-between mt-6">
+                    <button type="button" class="bg-gray-200 text-gray-800 px-6 py-2 rounded-lg font-medium hover:bg-gray-300" onclick="prevStep(7)">
+                        Voltar
+                    </button>
+                    <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-green-700">
+                        Confirmar e Enviar
+                    </button>
+                </div>
+            </div>
+        </form>
+        
+        <div id="responseMessage" class="text-center font-medium mt-4 hidden"></div>
+    </div>
+
+    <script>
+        // Configuração do progresso e navegação do formulário
+        const totalSteps = 7; // Aumentei para 7 por causa do passo de confirmação
+        let currentStep = 1;
+        
+        function updateProgress() {
+            const progressPercent = ((currentStep - 1) / (totalSteps - 1)) * 100;
+            document.getElementById('progress').style.width = `${progressPercent}%`;
+        }
+        
+        function showStep(step) {
+            // Esconde todos os passos
+            document.querySelectorAll('.form-step').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // Mostra o passo atual
+            document.getElementById(`step${step}`).classList.add('active');
+            currentStep = step;
+            updateProgress();
+        }
+        
+        function nextStep(currentStepNum) {
+            // Esconder todos os alertas
+            document.querySelectorAll('.alert').forEach(el => {
+                el.classList.add('hidden');
+            });
+            
+            // Validar campos do passo atual
+            const currentStepEl = document.getElementById(`step${currentStepNum}`);
+            const inputs = currentStepEl.querySelectorAll('input[required], select[required], textarea[required]');
+            
+            let isValid = true;
+            inputs.forEach(input => {
+                if (input.type === 'radio') {
+                    const name = input.name;
+                    const radioGroup = document.querySelectorAll(`input[name="${name}"]`);
+                    let radioValid = false;
+                    radioGroup.forEach(radio => {
+                        if (radio.checked) radioValid = true;
+                    });
+                    if (!radioValid) {
+                        isValid = false;
+                        // Mostrar alerta específico para o campo de rádio
+                        const alertId = `alert${name.charAt(0).toUpperCase() + name.slice(1)}`;
+                        const alertEl = document.getElementById(alertId);
+                        if (alertEl) alertEl.classList.remove('hidden');
+                    }
+                } else if (!input.value.trim()) {
+                    isValid = false;
+                    input.classList.add('border-red-500');
+                } else {
+                    input.classList.remove('border-red-500');
+                }
+            });
+            
+            if (!isValid) {
+                if (currentStepNum === 1) {
+                    alert('Por favor, selecione o tipo de contrato para continuar.');
+                } else {
+                    alert('Por favor, preencha todos os campos obrigatórios para continuar.');
+                }
+                return;
+            }
+            
+            showStep(currentStepNum + 1);
+        }
+        
+        function prevStep(currentStepNum) {
+            showStep(currentStepNum - 1);
+        }
+        
+        function showConfirmation() {
+            // Validar campos do passo 6 antes de mostrar a confirmação
+            const currentStepEl = document.getElementById('step6');
+            const inputs = currentStepEl.querySelectorAll('input[required], select[required], textarea[required]');
+            
+            let isValid = true;
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    isValid = false;
+                    input.classList.add('border-red-500');
+                } else {
+                    input.classList.remove('border-red-500');
+                }
+            });
+            
+            if (!isValid) {
+                alert('Por favor, preencha todos os campos obrigatórios para continuar.');
+                return;
+            }
+            
+            // Preencher a tela de confirmação com os dados do formulário
+            const dadosConfirmacao = document.getElementById('dadosConfirmacao');
+            dadosConfirmacao.innerHTML = '';
+            
+            // Dados do contrato
+            const tipoContrato = document.querySelector('input[name="tipoContrato"]:checked').value;
+            const plano = document.querySelector('input[name="plano"]:checked').value;
+            const formaPagamento = document.querySelector('input[name="formaPagamento"]:checked').value;
+            
+            // Dados pessoais
+            const nome = document.getElementById('nome').value;
+            const email = document.getElementById('email').value;
+            const atividade = document.getElementById('atividade').value;
+            const estadoCivil = document.getElementById('estadoCivil').value;
+            const naturalidade = document.getElementById('naturalidade').value;
+            const celular = document.getElementById('celular').value;
+            const rg = document.getElementById('rg').value;
+            const cpf = document.getElementById('cpf').value;
+            const tituloEleitoral = document.getElementById('tituloEleitoral').value || "Não informado";
+            
+            // Endereço formatado
+            const enderecoCompleto = `${document.getElementById('rua').value}, ${document.getElementById('numero').value}${document.getElementById('complemento').value ? ', ' + document.getElementById('complemento').value : ''} - ${document.getElementById('bairro').value} - ${document.getElementById('cidade').value}/${document.getElementById('uf').value} - CEP: ${document.getElementById('cep').value}`;
+            
+            const dataContrato = document.getElementById('dataContrato').value;
+            
+            // Adicionar cada item à tela de confirmação
+            const dadosItens = [
+                { label: "Tipo de Contrato", value: tipoContrato, step: 1 },
+                { label: "Plano Escolhido", value: plano, step: 2 },
+                { label: "Forma de Pagamento", value: formaPagamento, step: 3 },
+                { label: "Nome Completo", value: nome, step: 4 },
+                { label: "Email", value: email, step: 4 },
+                { label: "Atividade Profissional", value: atividade, step: 4 },
+                { label: "Estado Civil", value: estadoCivil, step: 4 },
+                { label: "Naturalidade", value: naturalidade, step: 4 },
+                { label: "Celular", value: celular, step: 5 },
+                { label: "RG", value: rg, step: 5 },
+                { label: "CPF", value: cpf, step: 5 },
+                { label: "Título Eleitoral", value: tituloEleitoral, step: 5 },
+                { label: "Endereço", value: enderecoCompleto, step: 6 },
+                { label: "Data do Contrato", value: formatarData(dataContrato), step: 6 }
+            ];
+            
+            dadosItens.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'summary-item';
+                div.innerHTML = `
+                    <div class="label">${item.label}:</div>
+                    <div class="flex items-center">
+                        <div class="value mr-2">${item.value}</div>
+                        <button type="button" onclick="editStep(${item.step})" class="text-indigo-600 hover:text-indigo-800 text-sm" title="Editar">
+                            ✏️
+                        </button>
+                    </div>
+                `;
+                dadosConfirmacao.appendChild(div);
+            });
+            
+            showStep(7);
+        }
+        
+        function formatarData(dataISO) {
+            if (!dataISO) return '';
+            const data = new Date(dataISO);
+            return data.toLocaleDateString('pt-BR');
+        }
+        
+        function editStep(step) {
+            showStep(step);
+        }
+        
+        // Máscara para o telefone
+        document.getElementById("celular").addEventListener("input", function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 11) value = value.substring(0, 11);
+            
+            // Aplicando máscara (##) #####-####
+            if (value.length > 0) {
+                value = '(' + value;
+                if (value.length > 3) {
+                    value = value.substring(0, 3) + ') ' + value.substring(3);
+                }
+                if (value.length > 10) {
+                    value = value.substring(0, 10) + '-' + value.substring(10);
+                }
+            }
+            
+            e.target.value = value;
+        });
+        
+        // Máscara para o CPF
+        document.getElementById("cpf").addEventListener("input", function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 11) value = value.substring(0, 11);
+            
+            // Aplicando máscara ###.###.###-##
+            if (value.length > 3) {
+                value = value.substring(0, 3) + '.' + value.substring(3);
+            }
+            if (value.length > 7) {
+                value = value.substring(0, 7) + '.' + value.substring(7);
+            }
+            if (value.length > 11) {
+                value = value.substring(0, 11) + '-' + value.substring(11);
+            }
+            
+            e.target.value = value;
+        });
+        
+        // Máscara para o CEP
+        document.getElementById("cep").addEventListener("input", function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 8) value = value.substring(0, 8);
+            
+            // Aplicando máscara #####-###
+            if (value.length > 5) {
+                value = value.substring(0, 5) + '-' + value.substring(5);
+            }
+            
+            e.target.value = value;
+            
+            // Consultar CEP quando tiver 8 dígitos (sem traço)
+            if (value.replace('-', '').length === 8) {
+                buscarEnderecoPorCEP(value);
+            }
+        });
+        
+        // Função para buscar o endereço usando a API ViaCEP
+        function buscarEnderecoPorCEP(cep) {
+            // Remover qualquer formatação do CEP
+            cep = cep.replace(/\D/g, '');
+            
+            if (cep.length !== 8) return;
+            
+            // Mostrar o spinner de carregamento
+            document.getElementById('cepSpinner').classList.remove('hidden');
+            document.getElementById('cepError').classList.add('hidden');
+            
+            // Limpar campos de erro anteriores
+            document.getElementById('cep').classList.remove('border-red-500');
+            
+            // URL da API ViaCEP
+            const url = `https://viacep.com.br/ws/${cep}/json/`;
+            
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    // Esconder o spinner
+                    document.getElementById('cepSpinner').classList.add('hidden');
+                    
+                    // Verificar se o CEP existe
+                    if (data.erro) {
+                        document.getElementById('cepError').classList.remove('hidden');
+                        document.getElementById('cep').classList.add('border-red-500');
+                        return;
+                    }
+                    
+                    // Preencher os campos com os dados do endereço
+                    document.getElementById('rua').value = data.logradouro;
+                    document.getElementById('bairro').value = data.bairro;
+                    document.getElementById('cidade').value = data.localidade;
+                    document.getElementById('uf').value = data.uf;
+                    
+                    // Focar no campo de número
+                    document.getElementById('numero').focus();
+                })
+                .catch(error => {
+                    // Esconder o spinner e mostrar o erro
+                    document.getElementById('cepSpinner').classList.add('hidden');
+                    document.getElementById('cepError').classList.remove('hidden');
+                    document.getElementById('cep').classList.add('border-red-500');
+                    console.error('Erro ao buscar CEP:', error);
+                });
+        }
+        
+        // Envio do formulário
+        document.getElementById("contractForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+            
+            // URL do webhook (substitua pela URL correta)
+            const webhookURL = "https://webhook.elegis.com.br/webhook/d75013f1-7246-4ec8-a545-a7a827b80119";
+            
+            // Construir o endereço completo
+            const enderecoCompleto = `${document.getElementById('rua').value}, ${document.getElementById('numero').value}${document.getElementById('complemento').value ? ', ' + document.getElementById('complemento').value : ''} - ${document.getElementById('bairro').value} - ${document.getElementById('cidade').value}/${document.getElementById('uf').value} - CEP: ${document.getElementById('cep').value}`;
+            
+            const formData = {
+                tipoContrato: document.querySelector('input[name="tipoContrato"]:checked').value,
+                plano: document.querySelector('input[name="plano"]:checked').value,
+                formaPagamento: document.querySelector('input[name="formaPagamento"]:checked').value,
+                nome: document.getElementById("nome").value,
+                email: document.getElementById("email").value,
+                atividade: document.getElementById("atividade").value,
+                estadoCivil: document.getElementById("estadoCivil").value,
+                naturalidade: document.getElementById("naturalidade").value,
+                celular: document.getElementById("celular").value,
+                rg: document.getElementById("rg").value,
+                cpf: document.getElementById("cpf").value,
+                tituloEleitoral: document.getElementById("tituloEleitoral").value || "Não informado",
+                endereco: enderecoCompleto,
+                dataContrato: document.getElementById("dataContrato").value
+            };
+            
+            try {
+                const response = await fetch(webhookURL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(formData)
+                });
+                
+                const responseEl = document.getElementById("responseMessage");
+                
+                if (response.ok) {
+                    responseEl.textContent = "✅ Contrato enviado com sucesso! Em breve entraremos em contato.";
+                    responseEl.classList.remove("hidden", "text-red-600");
+                    responseEl.classList.add("text-green-600");
+                    document.getElementById("contractForm").reset();
+                    showStep(1);
+                } else {
+                    responseEl.textContent = "❌ Erro ao enviar contrato. Por favor, tente novamente.";
+                    responseEl.classList.remove("hidden", "text-green-600");
+                    responseEl.classList.add("text-red-600");
+                }
+            } catch (error) {
+                const responseEl = document.getElementById("responseMessage");
+                responseEl.textContent = "❌ Erro ao enviar contrato. Por favor, tente novamente.";
+                responseEl.classList.remove("hidden", "text-green-600");
+                responseEl.classList.add("text-red-600");
+                console.error("Erro:", error);
+            }
+        });
+        
+        // Inicializar o progresso
+        updateProgress();
+    </script>
+</body>
+</html> 
