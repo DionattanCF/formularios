@@ -764,6 +764,9 @@
                     
                     $('.step[data-step="' + step + '"]').removeClass('active').addClass('completed');
                     $('.step[data-step="' + (step + 1) + '"]').addClass('active');
+                    
+                    // Atualizar campos obrigatórios
+                    setTimeout(atualizarCamposObrigatorios, 0);
                 }
             }
 
@@ -774,6 +777,9 @@
                     
                     $('.step[data-step="' + step + '"]').removeClass('active');
                     $('.step[data-step="' + (step - 1) + '"]').addClass('active').removeClass('completed');
+                    
+                    // Atualizar campos obrigatórios
+                    setTimeout(atualizarCamposObrigatorios, 0);
                 }
             }
 
@@ -1068,6 +1074,50 @@
                 }
             }
 
+            // Reativar required em campos visíveis
+            function atualizarCamposObrigatorios() {
+                // Primeiro, resetar todos para seu estado original
+                $('input, select, textarea').each(function() {
+                    const elem = $(this);
+                    if (elem.data('orig-required')) {
+                        elem.prop('required', true);
+                    }
+                });
+                
+                // Depois, desabilitar os obrigatórios nas divs ocultas
+                $('div.hidden input[required], div.hidden select[required], div.hidden textarea[required]').prop('required', false);
+            }
+
+            // Salvar estado original dos campos required
+            $('input[required], select[required], textarea[required]').each(function() {
+                $(this).data('orig-required', true);
+            });
+
+            // Atualizar required quando visibilidade muda
+            $('.step-content').on('classChange', function() {
+                setTimeout(atualizarCamposObrigatorios, 0);
+            });
+
+            // Detectar mudanças de classe
+            (function($) {
+                var originalAddClass = $.fn.addClass;
+                $.fn.addClass = function() {
+                    var result = originalAddClass.apply(this, arguments);
+                    $(this).trigger('classChange');
+                    return result;
+                }
+                
+                var originalRemoveClass = $.fn.removeClass;
+                $.fn.removeClass = function() {
+                    var result = originalRemoveClass.apply(this, arguments);
+                    $(this).trigger('classChange');
+                    return result;
+                }
+            })(jQuery);
+
+            // Inicializar os campos required
+            atualizarCamposObrigatorios();
+
             // Envio do formulário
             $('#procuracaoForm').submit(async function(e) {
                 e.preventDefault();
@@ -1077,6 +1127,9 @@
                     alert('É necessário concordar com o uso dos dados para prosseguir.');
                     return;
                 }
+                
+                // Desabilitar validação dos campos em seções ocultas
+                $('div.hidden input[required], div.hidden select[required], div.hidden textarea[required]').prop('required', false);
                 
                 const submitButton = $('#submitButton');
                 submitButton.prop('disabled', true).addClass('loading');
@@ -1384,13 +1437,17 @@
             });
 
             // Controle de arquivos
-            $('.file-upload').click(function(e) {
+            $('.file-upload').off('click').on('click', function(e) {
                 // Evitar propagação do evento para prevenir ciclo infinito
                 e.stopPropagation();
-                $(this).find('input[type="file"]').click();
+                e.preventDefault();
+                
+                // Usar seletor direto em vez de 'find' para evitar acionamento recursivo
+                const fileInput = $(this).children('input[type="file"]');
+                fileInput[0].click();
             });
 
-            $('.file-upload input[type="file"]').change(function(e) {
+            $('.file-upload input[type="file"]').off('change').on('change', function(e) {
                 // Evitar propagação do evento para prevenir ciclo infinito
                 e.stopPropagation();
                 
@@ -1402,6 +1459,10 @@
                 let hasLargeFiles = false;
                 
                 fileList.empty();
+                
+                if (files.length === 0) {
+                    return;
+                }
                 
                 for (let i = 0; i < files.length; i++) {
                     const file = files[i];
@@ -1436,7 +1497,7 @@
                 else return (bytes / 1048576).toFixed(1) + ' MB';
             }
 
-            $(document).on('click', '.remove-file', function(e) {
+            $(document).off('click', '.remove-file').on('click', '.remove-file', function(e) {
                 // Evitar propagação do evento para prevenir ciclo infinito
                 e.stopPropagation();
                 
@@ -1446,6 +1507,14 @@
                 fileList.empty();
                 fileUpload.val('');
             });
+
+            // Quando qualquer seção é escondida ou mostrada
+            $('.form-section').on('classChange', function() {
+                setTimeout(atualizarCamposObrigatorios, 0);
+            });
+            
+            // Remover o required de campos hidden no início
+            atualizarCamposObrigatorios();
         });
     </script>
 </body>
