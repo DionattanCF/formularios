@@ -693,11 +693,11 @@
                 <div class="form-section">
                     <h2 class="form-section-title">Documentos</h2>
                     <div class="document-info">
-                        <p>Os documentos abaixo não são obrigatórios para o preenchimento do formulário, mas devem ser enviados junto com a procuração para validação.</p>
+                        <p><strong>Importante:</strong> O envio dos documentos abaixo é opcional através deste formulário. Você pode anexá-los agora ou enviá-los posteriormente por WhatsApp ou email. Os documentos serão necessários para validação da procuração.</p>
                     </div>
 
                     <div class="form-group">
-                        <label>RG (frente e verso)</label>
+                        <label>RG (frente e verso) - opcional</label>
                         <div class="file-upload" data-doc="rg">
                             <i class="fas fa-file-upload"></i>
                             <p>Clique para anexar o RG</p>
@@ -707,7 +707,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label>CPF</label>
+                        <label>CPF - opcional</label>
                         <div class="file-upload" data-doc="cpf">
                             <i class="fas fa-file-upload"></i>
                             <p>Clique para anexar o CPF</p>
@@ -717,7 +717,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Comprovante de Endereço</label>
+                        <label>Comprovante de Endereço - opcional</label>
                         <div class="file-upload" data-doc="endereco">
                             <i class="fas fa-file-upload"></i>
                             <p>Clique para anexar o comprovante de endereço</p>
@@ -727,7 +727,7 @@
                     </div>
 
                     <div class="form-group" id="documentoEmpresa">
-                        <label>Ata da Empresa / Documentos da Coligação</label>
+                        <label>Ata da Empresa / Documentos da Coligação - opcional</label>
                         <div class="file-upload" data-doc="docs-adicionais">
                             <i class="fas fa-file-upload"></i>
                             <p>Clique para anexar documentos adicionais</p>
@@ -1388,9 +1388,9 @@
 
             // Função para adicionar os arquivos ao FormData com verificações
             function addFilesToFormData(formData) {
-                $('.file-upload input[type="file"]').each(function() {
-                    const docType = $(this).closest('.file-upload').data('doc');
-                    const files = this.files;
+                document.querySelectorAll('.file-upload input[type="file"]').forEach(function(fileInput) {
+                    const docType = fileInput.closest('.file-upload').getAttribute('data-doc');
+                    const files = fileInput.files;
                     const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
                     
                     for (let i = 0; i < files.length; i++) {
@@ -1436,77 +1436,99 @@
                 }, 300);
             });
 
-            // Controle de arquivos
-            $('.file-upload').off('click').on('click', function(e) {
-                // Evitar propagação do evento para prevenir ciclo infinito
-                e.stopPropagation();
-                e.preventDefault();
+            // Substituindo completamente o código de upload de arquivos
+            // Remover todos os manipuladores de eventos antigos
+            $('.file-upload').off();
+            $('.file-upload input[type="file"]').off();
+            $(document).off('click', '.remove-file');
+            
+            // Adicionar novos manipuladores usando método direto sem delegação
+            document.querySelectorAll('.file-upload').forEach(function(uploadBox) {
+                const fileInput = uploadBox.querySelector('input[type="file"]');
                 
-                // Usar seletor direto em vez de 'find' para evitar acionamento recursivo
-                const fileInput = $(this).children('input[type="file"]');
-                fileInput[0].click();
-            });
-
-            $('.file-upload input[type="file"]').off('change').on('change', function(e) {
-                // Evitar propagação do evento para prevenir ciclo infinito
-                e.stopPropagation();
-                
-                const fileList = $(this).closest('.form-group').find('.file-list');
-                const files = this.files;
-                
-                // Limitar o tamanho do arquivo (10MB)
-                const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
-                let hasLargeFiles = false;
-                
-                fileList.empty();
-                
-                if (files.length === 0) {
-                    return;
-                }
-                
-                for (let i = 0; i < files.length; i++) {
-                    const file = files[i];
-                    
-                    // Verificar tamanho do arquivo
-                    if (file.size > MAX_FILE_SIZE) {
-                        hasLargeFiles = true;
-                        const fileItem = $('<div class="file-item" style="background-color: #ffeeee;">')
-                            .append($('<span class="file-name">').text(file.name + ' (muito grande)'))
-                            .append($('<span class="remove-file">').html('&times;'));
-                        
-                        fileList.append(fileItem);
-                    } else {
-                        const fileItem = $('<div class="file-item">')
-                            .append($('<span class="file-name">').text(file.name))
-                            .append($('<span class="file-size">').text(' (' + formatFileSize(file.size) + ')'))
-                            .append($('<span class="remove-file">').html('&times;'));
-                        
-                        fileList.append(fileItem);
+                // Manipulador para o clique na caixa de upload
+                uploadBox.addEventListener('click', function(e) {
+                    // Evitar clique se clicar no botão de remover
+                    if (e.target.classList.contains('remove-file') || 
+                        e.target.closest('.remove-file')) {
+                        return;
                     }
-                }
+                    
+                    // Verificar se clicou na caixa, no ícone ou no texto
+                    if (e.target === uploadBox || 
+                        e.target.tagName === 'I' || 
+                        e.target.tagName === 'P') {
+                        // Usar click nativo em vez de trigger jQuery
+                        fileInput.click();
+                    }
+                });
                 
-                if (hasLargeFiles) {
-                    alert('Alguns arquivos são muito grandes (limite de 10MB). Por favor, reduza o tamanho ou selecione outros arquivos.');
-                }
+                // Manipulador para a mudança no input de arquivo
+                fileInput.addEventListener('change', function() {
+                    const fileList = uploadBox.closest('.form-group').querySelector('.file-list');
+                    const files = this.files;
+                    
+                    // Limitar o tamanho do arquivo (10MB)
+                    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+                    let hasLargeFiles = false;
+                    
+                    // Limpar a lista
+                    fileList.innerHTML = '';
+                    
+                    if (files.length === 0) {
+                        return;
+                    }
+                    
+                    // Processar cada arquivo
+                    for (let i = 0; i < files.length; i++) {
+                        const file = files[i];
+                        const fileItem = document.createElement('div');
+                        fileItem.className = 'file-item';
+                        
+                        // Verificar tamanho do arquivo
+                        if (file.size > MAX_FILE_SIZE) {
+                            hasLargeFiles = true;
+                            fileItem.style.backgroundColor = '#ffeeee';
+                            
+                            fileItem.innerHTML = `
+                                <span class="file-name">${file.name} (muito grande)</span>
+                                <span class="remove-file">&times;</span>
+                            `;
+                        } else {
+                            fileItem.innerHTML = `
+                                <span class="file-name">${file.name}</span>
+                                <span class="file-size">(${formatFileSize(file.size)})</span>
+                                <span class="remove-file">&times;</span>
+                            `;
+                        }
+                        
+                        fileList.appendChild(fileItem);
+                        
+                        // Adicionar manipulador para o botão de remover deste item específico
+                        const removeButton = fileItem.querySelector('.remove-file');
+                        removeButton.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            fileItem.remove();
+                            
+                            // Se lista vazia, limpar o input
+                            if (fileList.children.length === 0) {
+                                fileInput.value = '';
+                            }
+                        });
+                    }
+                    
+                    if (hasLargeFiles) {
+                        alert('Alguns arquivos são muito grandes (limite de 10MB). Por favor, reduza o tamanho ou selecione outros arquivos.');
+                    }
+                });
             });
-
+            
             // Função para formatar o tamanho do arquivo
             function formatFileSize(bytes) {
                 if (bytes < 1024) return bytes + ' bytes';
                 else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
                 else return (bytes / 1048576).toFixed(1) + ' MB';
             }
-
-            $(document).off('click', '.remove-file').on('click', '.remove-file', function(e) {
-                // Evitar propagação do evento para prevenir ciclo infinito
-                e.stopPropagation();
-                
-                const fileList = $(this).closest('.file-list');
-                const fileUpload = fileList.closest('.form-group').find('.file-upload input[type="file"]');
-                
-                fileList.empty();
-                fileUpload.val('');
-            });
 
             // Quando qualquer seção é escondida ou mostrada
             $('.form-section').on('classChange', function() {
