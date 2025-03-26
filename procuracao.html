@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Procuração Coutrin & Figueiredo Advogados Associados</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #003366;
+            --secondary-color: #0056b3;
+            --accent-color: #007bff;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --border-color: #dee2e6;
+            --success-color: #28a745;
+            --success-bg: #d4edda;
+            --gray-light: #f2f2f2;
+            --gray-medium: #e0e0e0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--gray-light);
+            color: #333;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 25px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .header h1 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-weight: 600;
+            font-size: 32px;
+        }
+        
+        .header p {
+            color: #555;
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+        
+        .form-group {
+            margin-bottom: 28px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: var(--dark-color);
+            font-size: 16px;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            background-color: #fcfcfc;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+            background-color: white;
+        }
+        
+        .required::after {
+            content: " *";
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 16px 28px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            display: block;
+            margin: 40px auto 0;
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 320px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        button:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .loading {
+            position: relative;
+            color: transparent !important;
+        }
+        
+        .loading::after {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            margin: -10px 0 0 -10px;
+            border: 2px solid #fff;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: button-loading-spinner 0.8s linear infinite;
+        }
+        
+        @keyframes button-loading-spinner {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .form-section {
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .form-section:last-of-type {
+            border-bottom: none;
+        }
+        
+        .form-section-title {
+            font-size: 22px;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            padding-bottom: 12px;
+            border-bottom: 1px dashed var(--gray-medium);
+            font-weight: 600;
+        }
+        
+        .required-note {
+            text-align: right;
+            font-size: 15px;
+            color: #6c757d;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .orientation {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #495057;
+        }
+        
+        .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 28px;
+            }
+            
+            button {
+                max-width: 100%;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .container {
+                padding: 25px 15px;
+                border-radius: 8px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .form-section-title {
+                font-size: 20px;
+            }
+        }
+
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .steps::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gray-medium);
+            z-index: 1;
+        }
+
+        .step {
+            position: relative;
+            z-index: 2;
+            background: white;
+            padding: 0 15px;
+            text-align: center;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gray-medium);
+            color: #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .step.active .step-number {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .step.completed .step-number {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .step-title {
+            font-size: 14px;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+
+        .step.active .step-title {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .step.completed .step-title {
+            color: var(--success-color);
+        }
+
+        .step-content {
+            display: none;
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-secondary {
+            background: var(--gray-medium);
+            color: var(--dark-color);
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .file-upload {
+            border: 2px dashed var(--gray-medium);
+            border-radius: 6px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload:hover {
+            border-color: var(--primary-color);
+            background: rgba(0, 51, 102, 0.05);
+        }
+
+        .file-upload input[type="file"] {
+            display: none;
+        }
+
+        .file-upload i {
+            font-size: 24px;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .file-list {
+            margin-top: 15px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            background: var(--gray-light);
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+
+        .file-item .file-name {
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        .file-item .remove-file {
+            color: #dc3545;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .document-info {
+            background: var(--gray-light);
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .consentimento-box {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .consentimento-box input[type="checkbox"] {
+            width: auto;
+            margin-top: 4px;
+        }
+
+        .consentimento-box label {
+            margin-bottom: 0;
+            font-weight: normal;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Procuração Coutrin & Figueiredo Advogados Associados</h1>
+            <p>Preencha o formulário abaixo para elaborar sua procuração. Sua procuração será enviada em seu WhatsApp.</p>
+        </div>
+
+        <form id="procuracaoForm" novalidate>
+            <!-- Navegação entre etapas -->
+            <div class="steps">
+                <div class="step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Tipo de Procuração</div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Dados Específicos</div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Dados Pessoais</div>
+                </div>
+                <div class="step" data-step="4">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Documentos</div>
+                </div>
+            </div>
+
+            <!-- Etapa 1: Tipo de Procuração -->
+            <div class="step-content active" data-step="1">
+                <div class="form-section">
+                    <h2 class="form-section-title">Seção 1</h2>
+                    <div class="form-group">
+                        <label class="required">1.1 - Marque uma das opções abaixo</label>
+                        <select id="tipoProcuracao" required>
+                            <option value="">Selecione uma opção</option>
+                            <option value="pessoa_fisica">Pessoa Física</option>
+                            <option value="pessoa_juridica">Pessoa Jurídica</option>
+                            <option value="coligacao">Coligação</option>
+                        </select>
+                        <div class="error-message">Selecione uma opção para prosseguir</div>
+                    </div>
+                </div>
+                <div class="navigation-buttons">
+                    <button type="button" class="btn btn-primary" id="nextStep1">Próximo</button>
+                </div>
+            </div>
+
+            <!-- Etapa 2: Dados Específicos -->
+            <div class="step-content" data-step="2">
+                <div id="partidoSection" class="form-section hidden">
+                    <h2 class="form-section-title">Dados do Partido</h2>
+                    <div class="form-group">
+                        <label>2 - Qual o nome do Partido, Comissão Provisória ou Diretório</label>
+                        <input type="text" name="nomePartido">
+                    </div>
+                </div>
+                <div id="pessoaJuridicaSection" class="form-section hidden">
+                    <h2 class="form-section-title">Dados da Empresa</h2>
+                    <div class="form-group">
+                        <label class="required">CNPJ da Empresa</label>
+                        <div class="form-row" style="display: flex; gap: 10px; margin-bottom: 10px;">
+                            <input type="text" name="cnpjEmpresa" id="cnpjEmpresa" class="cnpj" style="flex: 1;" required>
+                            <button type="button" id="consultarCNPJ" class="btn-secondary" style="width: auto; margin: 0;">Consultar CNPJ</button>
+                        </div>
+                        <div class="error-message">CNPJ inválido</div>
+                    </div>
+                    <div id="dadosEmpresa" class="hidden">
+                        <div class="form-group">
+                            <label class="required">Razão Social</label>
+                            <input type="text" name="razaoSocial" id="razaoSocial" readonly required>
+                        </div>
+                        <div class="form-group">
+                            <label class="required">Nome Fantasia</label>
+                            <input type="text" name="nomeFantasia" id="nomeFantasia" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="required">Endereço</label>
+                            <input type="text" name="logradouroEmpresa" id="logradouroEmpresa" readonly required>
+                        </div>
+                        <div class="form-group">
+                            <label class="required">Número</label>
+                            <input type="text" name="numeroEmpresa" id="numeroEmpresa" readonly required>
+                        </div>
+                        <div class="form-group">
+                            <label>Complemento</label>
+                            <input type="text" name="complementoEmpresa" id="complementoEmpresa" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="required">Bairro</label>
+                            <input type="text" name="bairroEmpresa" id="bairroEmpresa" readonly required>
+                        </div>
+                        <div class="form-group">
+                            <label class="required">Cidade</label>
+                            <input type="text" name="cidadeEmpresa" id="cidadeEmpresa" readonly required>
+                        </div>
+                        <div class="form-group">
+                            <label class="required">Estado</label>
+                            <input type="text" name="estadoEmpresa" id="estadoEmpresa" readonly required>
+                        </div>
+                        <div class="form-group">
+                            <label class="required">CEP</label>
+                            <input type="text" name="cepEmpresa" id="cepEmpresa" readonly required>
+                        </div>
+                        <div class="form-group">
+                            <label class="required">Email para contato</label>
+                            <input type="email" name="emailEmpresa" id="emailEmpresa" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="required">Cargo ocupado na empresa</label>
+                            <input type="text" name="cargoEmpresa" id="cargoEmpresa" required>
+                        </div>
+                        <div class="form-group">
+                            <p>Os dados acima estão corretos?</p>
+                            <div style="display: flex; gap: 20px;">
+                                <button type="button" id="confirmarDadosEmpresa" class="btn btn-primary" style="width: auto; margin: 0;">Sim, prosseguir</button>
+                                <button type="button" id="editarDadosEmpresa" class="btn btn-secondary" style="width: auto; margin: 0;">Não, editar dados</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="coligacaoSection" class="form-section hidden">
+                    <h2 class="form-section-title">Dados da Coligação</h2>
+                    <div class="form-group">
+                        <label>18 - Qual o nome da Coligação</label>
+                        <input type="text" name="nomeColigacao">
+                    </div>
+                    <div class="form-group">
+                        <label>20 - Informe seu email</label>
+                        <input type="email" name="emailColigacao">
+                    </div>
+                    <div class="form-group">
+                        <label>21 - Qual o endereço da coligação?</label>
+                        <textarea name="enderecoColigacao"></textarea>
+                    </div>
+                </div>
+                <div class="navigation-buttons">
+                    <button type="button" class="btn btn-primary" id="nextStep2">Próximo</button>
+                    <button type="button" class="btn btn-secondary" id="prevStep2">Anterior</button>
+                </div>
+            </div>
+
+            <!-- Etapa 3: Dados Pessoais -->
+            <div class="step-content" data-step="3">
+                <div id="dadosPessoaisSection" class="form-section">
+                    <h2 class="form-section-title">Dados Pessoais</h2>
+                    <div class="form-group">
+                        <label class="required">7 - Nome Completo</label>
+                        <input type="text" name="nomeCompleto" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">8 - Data de Nascimento</label>
+                        <input type="date" name="dataNascimento" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">9 - Nome da Mãe</label>
+                        <input type="text" name="nomeMae" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">10 - Qual sua atividade profissional?</label>
+                        <input type="text" name="atividadeProfissional" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">11 - Qual seu Estado Civil?</label>
+                        <select name="estadoCivil" required>
+                            <option value="">Selecione uma opção</option>
+                            <option value="casado">Casado</option>
+                            <option value="casada">Casada</option>
+                            <option value="separado">Separado Judicialmente</option>
+                            <option value="solteiro">Solteiro</option>
+                            <option value="solteira">Solteira</option>
+                            <option value="viuvo">Viúvo</option>
+                            <option value="viuva">Viúva</option>
+                            <option value="convivente">Convivente</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">12 - Naturalidade</label>
+                        <input type="text" name="naturalidade" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">13 - N° Celular com WhatsApp</label>
+                        <input type="text" name="celular" class="telefone" required>
+                        <div class="error-message">Digite apenas números, sem o 9 inicial</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">14 - Número do RG</label>
+                        <input type="text" name="rg" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">15 - Número do CPF</label>
+                        <input type="text" name="cpf" class="cpf" required>
+                        <div class="error-message">CPF inválido</div>
+                    </div>
+                    <div class="form-group">
+                        <label>16 - Número do Título Eleitoral</label>
+                        <input type="text" name="tituloEleitoral">
+                    </div>
+                    <div class="form-group">
+                        <label class="required">17 - Endereço Completo</label>
+                        <div class="form-row">
+                            <input type="text" name="cep" class="cep" placeholder="CEP" required>
+                            <button type="button" id="buscarCep" class="btn-secondary">Buscar CEP</button>
+                        </div>
+                        <input type="text" name="logradouro" placeholder="Logradouro" required>
+                        <input type="text" name="numero" placeholder="Número" required>
+                        <input type="text" name="complemento" placeholder="Complemento">
+                        <input type="text" name="bairro" placeholder="Bairro" required>
+                        <input type="text" name="cidade" placeholder="Cidade" required>
+                        <select name="estado" required>
+                            <option value="">Selecione o Estado</option>
+                            <option value="AC">Acre</option>
+                            <option value="AL">Alagoas</option>
+                            <option value="AP">Amapá</option>
+                            <option value="AM">Amazonas</option>
+                            <option value="BA">Bahia</option>
+                            <option value="CE">Ceará</option>
+                            <option value="DF">Distrito Federal</option>
+                            <option value="ES">Espírito Santo</option>
+                            <option value="GO">Goiás</option>
+                            <option value="MA">Maranhão</option>
+                            <option value="MT">Mato Grosso</option>
+                            <option value="MS">Mato Grosso do Sul</option>
+                            <option value="MG">Minas Gerais</option>
+                            <option value="PA">Pará</option>
+                            <option value="PB">Paraíba</option>
+                            <option value="PR">Paraná</option>
+                            <option value="PE">Pernambuco</option>
+                            <option value="PI">Piauí</option>
+                            <option value="RJ">Rio de Janeiro</option>
+                            <option value="RN">Rio Grande do Norte</option>
+                            <option value="RS">Rio Grande do Sul</option>
+                            <option value="RO">Rondônia</option>
+                            <option value="RR">Roraima</option>
+                            <option value="SC">Santa Catarina</option>
+                            <option value="SP">São Paulo</option>
+                            <option value="SE">Sergipe</option>
+                            <option value="TO">Tocantins</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">18 - Finalidade da Procuração</label>
+                        <select name="finalidade" required>
+                            <option value="">Selecione uma opção</option>
+                            <option value="propor_acoes">Propor e defender ações</option>
+                            <option value="prestacao_contas">Acompanhar Prestação de Contas Eleitoral</option>
+                            <option value="acompanhar_processo">Acompanhar processo</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">19 - Data da Procuração</label>
+                        <input type="date" name="dataProcuracao" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">20 - Consentimento para uso dos dados</label>
+                        <div class="consentimento-box">
+                            <input type="checkbox" id="consentimento" name="consentimento" required>
+                            <label for="consentimento">Declaro que autorizo o uso dos dados fornecidos para a elaboração da procuração e outros documentos necessários ao fiel cumprimento dos poderes outorgados.</label>
+                        </div>
+                        <div class="error-message">É necessário concordar com o uso dos dados para prosseguir</div>
+                    </div>
+                </div>
+                <div class="navigation-buttons">
+                    <button type="button" class="btn btn-primary" id="nextStep3">Próximo</button>
+                    <button type="button" class="btn btn-secondary" id="prevStep3">Anterior</button>
+                </div>
+            </div>
+
+            <!-- Etapa 4: Documentos -->
+            <div class="step-content" data-step="4">
+                <div class="form-section">
+                    <h2 class="form-section-title">Documentos</h2>
+                    <div class="document-info">
+                        <p><strong>Importante:</strong> O envio dos documentos abaixo é opcional através deste formulário. Você pode anexá-los agora ou enviá-los posteriormente por WhatsApp ou email. Os documentos serão necessários para validação da procuração.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>RG (frente e verso) - opcional</label>
+                        <div class="file-upload" data-doc="rg">
+                            <i class="fas fa-file-upload"></i>
+                            <p>Clique para anexar o RG</p>
+                            <input type="file" accept="image/*,.pdf" multiple>
+                        </div>
+                        <div class="file-list"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>CPF - opcional</label>
+                        <div class="file-upload" data-doc="cpf">
+                            <i class="fas fa-file-upload"></i>
+                            <p>Clique para anexar o CPF</p>
+                            <input type="file" accept="image/*,.pdf">
+                        </div>
+                        <div class="file-list"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Comprovante de Endereço - opcional</label>
+                        <div class="file-upload" data-doc="endereco">
+                            <i class="fas fa-file-upload"></i>
+                            <p>Clique para anexar o comprovante de endereço</p>
+                            <input type="file" accept="image/*,.pdf">
+                        </div>
+                        <div class="file-list"></div>
+                    </div>
+
+                    <div class="form-group" id="documentoEmpresa">
+                        <label>Ata da Empresa / Documentos da Coligação - opcional</label>
+                        <div class="file-upload" data-doc="docs-adicionais">
+                            <i class="fas fa-file-upload"></i>
+                            <p>Clique para anexar documentos adicionais</p>
+                            <input type="file" accept="image/*,.pdf" multiple>
+                        </div>
+                        <div class="file-list"></div>
+                    </div>
+                </div>
+
+                <div class="navigation-buttons">
+                    <button type="button" class="btn btn-secondary" id="prevStep4">Anterior</button>
+                    <button type="button" class="btn btn-primary" id="showSubmitBtn">Finalizar</button>
+                </div>
+            </div>
+
+            <div class="required-note">* Campos obrigatórios</div>
+            <button type="submit" id="submitButton" class="hidden">Enviar Formulário</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Máscaras usando jQuery.mask
+            $('.cpf').mask('000.000.000-00');
+            $('.cnpj').mask('00.000.000/0000-00');
+            $('.telefone').mask('(00) 00000-0000');
+            $('.cep').mask('00000-000');
+
+            // Guardar o estado original dos campos required
+            var originalRequired = {};
+            document.querySelectorAll('input[required], select[required], textarea[required]').forEach(function(el) {
+                originalRequired[el.name || el.id] = true;
+            });
+
+            // Função para atualizar campos obrigatórios - implementação sem jQuery
+            function updateRequiredFields() {
+                console.log('Atualizando campos required...');
+                
+                // Primeiro, restaurar o estado original
+                for (let selector in originalRequired) {
+                    let elements = document.querySelectorAll(`[name="${selector}"], #${selector}`);
+                    elements.forEach(el => el.required = true);
+                }
+                
+                // Depois, remover required de todos os campos em seções ocultas
+                document.querySelectorAll('.hidden input, .hidden select, .hidden textarea, [style*="display: none"] input, [style*="display: none"] select, [style*="display: none"] textarea').forEach(function(el) {
+                    el.required = false;
+                });
+                
+                // Casos específicos
+                let tipoProcuracao = document.getElementById('tipoProcuracao').value;
+                
+                // Se não for pessoa jurídica, remover required de campos da empresa
+                if (tipoProcuracao !== 'pessoa_juridica') {
+                    document.querySelectorAll('#cnpjEmpresa, #razaoSocial, #nomeFantasia, #logradouroEmpresa, #numeroEmpresa, #bairroEmpresa, #cidadeEmpresa, #estadoEmpresa, #cepEmpresa, #emailEmpresa, #cargoEmpresa').forEach(function(el) {
+                        el.required = false;
+                    });
+                }
+                
+                // Se seção de pessoa jurídica estiver oculta
+                if (document.getElementById('pessoaJuridicaSection').classList.contains('hidden') ||
+                    document.getElementById('pessoaJuridicaSection').style.display === 'none') {
+                    document.querySelectorAll('#cnpjEmpresa, #razaoSocial, #nomeFantasia, #logradouroEmpresa, #numeroEmpresa, #bairroEmpresa, #cidadeEmpresa, #estadoEmpresa, #cepEmpresa, #emailEmpresa, #cargoEmpresa').forEach(function(el) {
+                        el.required = false;
+                    });
+                }
+                
+                // Se dados da empresa estiverem ocultos
+                if (document.getElementById('dadosEmpresa').classList.contains('hidden') ||
+                    document.getElementById('dadosEmpresa').style.display === 'none') {
+                    document.querySelectorAll('#razaoSocial, #nomeFantasia, #logradouroEmpresa, #numeroEmpresa, #bairroEmpresa, #cidadeEmpresa, #estadoEmpresa, #cepEmpresa, #emailEmpresa, #cargoEmpresa').forEach(function(el) {
+                        el.required = false;
+                    });
+                }
+            }
+
+            // Funções de navegação
+            function nextStep(step) {
+                if (step < 4) {
+                    document.querySelector(`.step-content[data-step="${step}"]`).classList.remove('active');
+                    document.querySelector(`.step-content[data-step="${step + 1}"]`).classList.add('active');
+                    
+                    document.querySelector(`.step[data-step="${step}"]`).classList.remove('active');
+                    document.querySelector(`.step[data-step="${step}"]`).classList.add('completed');
+                    document.querySelector(`.step[data-step="${step + 1}"]`).classList.add('active');
+                    
+                    // Atualizar campos required após mudar etapa
+                    setTimeout(updateRequiredFields, 10);
+                }
+            }
+
+            function prevStep(step) {
+                if (step > 1) {
+                    document.querySelector(`.step-content[data-step="${step}"]`).classList.remove('active');
+                    document.querySelector(`.step-content[data-step="${step - 1}"]`).classList.add('active');
+                    
+                    document.querySelector(`.step[data-step="${step}"]`).classList.remove('active');
+                    document.querySelector(`.step[data-step="${step - 1}"]`).classList.add('active');
+                    document.querySelector(`.step[data-step="${step - 1}"]`).classList.remove('completed');
+                    
+                    // Atualizar campos required após mudar etapa
+                    setTimeout(updateRequiredFields, 10);
+                }
+            }
+
+            // Substituir manipuladores jQuery por JavaScript puro
+            document.getElementById('nextStep1').addEventListener('click', function() {
+                const tipoProcuracao = document.getElementById('tipoProcuracao').value;
+                const errorMessage = document.getElementById('tipoProcuracao').nextElementSibling;
+                
+                if (!tipoProcuracao) {
+                    errorMessage.style.display = 'block';
+                    return;
+                }
+                
+                errorMessage.style.display = 'none';
+                
+                if (tipoProcuracao === 'pessoa_fisica') {
+                    // Se for Pessoa Física, vai direto para Dados Pessoais (etapa 3)
+                    document.querySelector('.step-content[data-step="1"]').classList.remove('active');
+                    document.querySelector('.step-content[data-step="3"]').classList.add('active');
+                    
+                    document.querySelector('.step[data-step="1"]').classList.remove('active');
+                    document.querySelector('.step[data-step="1"]').classList.add('completed');
+                    document.querySelector('.step[data-step="2"]').classList.add('completed');
+                    document.querySelector('.step[data-step="3"]').classList.add('active');
+                } else {
+                    // Para outras opções, vai para Dados Específicos (etapa 2)
+                    document.querySelector('.step-content[data-step="1"]').classList.remove('active');
+                    document.querySelector('.step-content[data-step="2"]').classList.add('active');
+                    
+                    document.querySelector('.step[data-step="1"]').classList.remove('active');
+                    document.querySelector('.step[data-step="1"]').classList.add('completed');
+                    document.querySelector('.step[data-step="2"]').classList.add('active');
+
+                    // Esconde todas as seções específicas
+                    document.querySelectorAll('#partidoSection, #pessoaJuridicaSection, #coligacaoSection').forEach(function(el) {
+                        el.classList.add('hidden');
+                    });
+                    
+                    // Mostra a seção específica correspondente
+                    if (tipoProcuracao === 'pessoa_juridica') {
+                        document.getElementById('pessoaJuridicaSection').classList.remove('hidden');
+                    } else if (tipoProcuracao === 'coligacao') {
+                        document.getElementById('coligacaoSection').classList.remove('hidden');
+                    }
+                }
+                
+                // Atualizar campos required após mudar etapa
+                setTimeout(updateRequiredFields, 10);
+            });
+
+            document.getElementById('nextStep2').addEventListener('click', function() {
+                nextStep(2);
+            });
+
+            document.getElementById('prevStep2').addEventListener('click', function() {
+                prevStep(2);
+            });
+
+            document.getElementById('nextStep3').addEventListener('click', function() {
+                // Mostrar ou esconder documentos específicos baseado no tipo de procuração
+                const tipoProcuracao = document.getElementById('tipoProcuracao').value;
+                if (tipoProcuracao === 'pessoa_juridica' || tipoProcuracao === 'coligacao') {
+                    document.getElementById('documentoEmpresa').style.display = '';
+                } else {
+                    document.getElementById('documentoEmpresa').style.display = 'none';
+                }
+                
+                nextStep(3);
+            });
+
+            document.getElementById('prevStep3').addEventListener('click', function() {
+                const tipoProcuracao = document.getElementById('tipoProcuracao').value;
+                if (tipoProcuracao === 'pessoa_fisica') {
+                    // Se for Pessoa Física, volta para a primeira etapa
+                    document.querySelector('.step-content[data-step="3"]').classList.remove('active');
+                    document.querySelector('.step-content[data-step="1"]').classList.add('active');
+                    
+                    document.querySelector('.step[data-step="3"]').classList.remove('active');
+                    document.querySelector('.step[data-step="1"]').classList.add('active');
+                    document.querySelector('.step[data-step="1"]').classList.remove('completed');
+                    document.querySelector('.step[data-step="2"]').classList.remove('completed');
+                } else {
+                    // Para outras opções, volta para Dados Específicos
+                    prevStep(3);
+                }
+                
+                // Atualizar campos required após mudar etapa
+                setTimeout(updateRequiredFields, 10);
+            });
+
+            document.getElementById('prevStep4').addEventListener('click', function() {
+                prevStep(4);
+            });
+
+            document.getElementById('showSubmitBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Mostrar o botão de envio
+                document.getElementById('submitButton').classList.remove('hidden');
+                this.classList.add('hidden');
+                
+                // Opcionalmente, rolar até o botão para garantir que esteja visível
+                document.getElementById('submitButton').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+
+            // Configurações das uploads de arquivos
+            document.querySelectorAll('.file-upload').forEach(function(uploadBox) {
+                const fileInput = uploadBox.querySelector('input[type="file"]');
+                const fileList = uploadBox.parentElement.querySelector('.file-list');
+                
+                // Manipulador nativo para clique na área de upload
+                uploadBox.addEventListener('click', function(e) {
+                    // Se clicar no botão de remover ou seus filhos, não faz nada
+                    if (e.target.classList.contains('remove-file') || e.target.closest('.remove-file')) {
+                        return;
+                    }
+                    
+                    // Se clicou na caixa, no ícone ou no texto, abre o seletor de arquivo
+                    if (e.target === uploadBox || e.target.tagName === 'I' || e.target.tagName === 'P') {
+                        fileInput.click();
+                    }
+                });
+                
+                // Manipulador nativo para a alteração do input de arquivo
+                fileInput.addEventListener('change', function() {
+                    const files = this.files;
+                    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+                    let hasLargeFiles = false;
+                    
+                    // Limpar a lista de arquivos
+                    fileList.innerHTML = '';
+                    
+                    if (files.length === 0) return;
+                    
+                    // Processar os arquivos selecionados
+                    for (let i = 0; i < files.length; i++) {
+                        const file = files[i];
+                        const fileItem = document.createElement('div');
+                        fileItem.className = 'file-item';
+                        
+                        if (file.size > MAX_FILE_SIZE) {
+                            hasLargeFiles = true;
+                            fileItem.style.backgroundColor = '#ffeeee';
+                            fileItem.innerHTML = `
+                                <span class="file-name">${file.name} (muito grande)</span>
+                                <span class="remove-file">&times;</span>
+                            `;
+                        } else {
+                            fileItem.innerHTML = `
+                                <span class="file-name">${file.name}</span>
+                                <span class="file-size">(${formatFileSize(file.size)})</span>
+                                <span class="remove-file">&times;</span>
+                            `;
+                        }
+                        
+                        fileList.appendChild(fileItem);
+                        
+                        // Manipulador para o botão de remover
+                        const removeButton = fileItem.querySelector('.remove-file');
+                        removeButton.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            fileItem.remove();
+                            
+                            // Se a lista estiver vazia, limpa o input de arquivo
+                            if (fileList.children.length === 0) {
+                                const newFileInput = document.createElement('input');
+                                newFileInput.type = 'file';
+                                newFileInput.accept = fileInput.accept;
+                                if (fileInput.multiple) newFileInput.multiple = true;
+                                
+                                // Substituir o input antigo pelo novo (limpo)
+                                fileInput.parentNode.replaceChild(newFileInput, fileInput);
+                                
+                                // Replicar o event listener para o novo input
+                                newFileInput.addEventListener('change', fileInput.onchange);
+                            }
+                        });
+                    }
+                    
+                    if (hasLargeFiles) {
+                        alert('Alguns arquivos são muito grandes (limite de 10MB). Por favor, reduza o tamanho ou selecione outros arquivos.');
+                    }
+                });
+            });
+            
+            // Função para formatar o tamanho do arquivo
+            function formatFileSize(bytes) {
+                if (bytes < 1024) return bytes + ' bytes';
+                else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+                else return (bytes / 1048576).toFixed(1) + ' MB';
+            }
+
+            // Função para adicionar os arquivos ao FormData
+            function addFilesToFormData(formData) {
+                document.querySelectorAll('.file-upload input[type="file"]').forEach(function(fileInput) {
+                    const docType = fileInput.closest('.file-upload').getAttribute('data-doc');
+                    const files = fileInput.files;
+                    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+                    
+                    for (let i = 0; i < files.length; i++) {
+                        const file = files[i];
+                        // Pular arquivos muito grandes
+                        if (file.size > MAX_FILE_SIZE) continue;
+                        
+                        formData.append(`arquivo_${docType}`, file);
+                    }
+                });
+                
+                return formData;
+            }
+
+            // Validação de CPF
+            function validarCPF(cpf) {
+                cpf = cpf.replace(/[^\d]/g, '');
+                
+                if (cpf.length !== 11) return false;
+                
+                // Elimina CPFs inválidos conhecidos
+                if (/^(\d)\1+$/.test(cpf)) return false;
+                
+                let soma = 0;
+                let resto;
+                
+                for (let i = 1; i <= 9; i++) {
+                    soma += parseInt(cpf.substring(i-1, i)) * (11 - i);
+                }
+                
+                resto = (soma * 10) % 11;
+                if (resto === 10 || resto === 11) resto = 0;
+                if (resto !== parseInt(cpf.substring(9, 10))) return false;
+                
+                soma = 0;
+                for (let i = 1; i <= 10; i++) {
+                    soma += parseInt(cpf.substring(i-1, i)) * (12 - i);
+                }
+                
+                resto = (soma * 10) % 11;
+                if (resto === 10 || resto === 11) resto = 0;
+                if (resto !== parseInt(cpf.substring(10, 11))) return false;
+                
+                return true;
+            }
+
+            // Validação de CNPJ
+            function validarCNPJ(cnpj) {
+                cnpj = cnpj.replace(/[^\d]/g, '');
+                
+                if (cnpj.length !== 14) return false;
+                
+                // Elimina CNPJs inválidos conhecidos
+                if (/^(\d)\1+$/.test(cnpj)) return false;
+                
+                let tamanho = cnpj.length - 2;
+                let numeros = cnpj.substring(0, tamanho);
+                let digitos = cnpj.substring(tamanho);
+                
+                let soma = 0;
+                let pos = tamanho - 7;
+                
+                for (let i = tamanho; i >= 1; i--) {
+                    soma += numeros.charAt(tamanho - i) * pos--;
+                    if (pos < 2) pos = 9;
+                }
+                
+                let resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+                if (resultado !== parseInt(digitos.charAt(0))) return false;
+                
+                tamanho = tamanho + 1;
+                numeros = cnpj.substring(0, tamanho);
+                soma = 0;
+                pos = tamanho - 7;
+                
+                for (let i = tamanho; i >= 1; i--) {
+                    soma += numeros.charAt(tamanho - i) * pos--;
+                    if (pos < 2) pos = 9;
+                }
+                
+                resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+                if (resultado !== parseInt(digitos.charAt(1))) return false;
+                
+                return true;
+            }
+
+            // Event listeners para validação
+            document.querySelectorAll('.cpf').forEach(function(input) {
+                input.addEventListener('blur', function() {
+                    const cpf = this.value;
+                    const errorMessage = this.nextElementSibling;
+                    
+                    if (!validarCPF(cpf)) {
+                        errorMessage.style.display = 'block';
+                    } else {
+                        errorMessage.style.display = 'none';
+                    }
+                });
+            });
+
+            document.querySelectorAll('.cnpj').forEach(function(input) {
+                input.addEventListener('blur', function() {
+                    const cnpj = this.value;
+                    const errorMessage = this.nextElementSibling;
+                    
+                    if (!validarCNPJ(cnpj)) {
+                        errorMessage.style.display = 'block';
+                    } else {
+                        errorMessage.style.display = 'none';
+                    }
+                });
+            });
+
+            // Busca de CEP
+            document.getElementById('buscarCep').addEventListener('click', function() {
+                const cep = document.querySelector('input[name="cep"]').value.replace(/\D/g, '');
+                if (cep.length !== 8) {
+                    alert('CEP inválido');
+                    return;
+                }
+
+                fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.erro) {
+                            alert('CEP não encontrado');
+                            return;
+                        }
+                        
+                        document.querySelector('input[name="logradouro"]').value = data.logradouro;
+                        document.querySelector('input[name="bairro"]').value = data.bairro;
+                        document.querySelector('input[name="cidade"]').value = data.localidade;
+                        document.querySelector('select[name="estado"]').value = data.uf;
+                    })
+                    .catch(error => {
+                        console.error('Erro ao buscar CEP:', error);
+                        alert('Erro ao buscar o CEP. Tente novamente mais tarde.');
+                    });
+            });
+
+            // Consulta de CNPJ
+            document.getElementById('consultarCNPJ').addEventListener('click', function() {
+                const cnpjInput = document.getElementById('cnpjEmpresa');
+                const cnpj = cnpjInput.value.replace(/\D/g, '');
+                const errorMessage = cnpjInput.parentElement.parentElement.querySelector('.error-message');
+                
+                if (!validarCNPJ(cnpj)) {
+                    errorMessage.style.display = 'block';
+                    return;
+                }
+                
+                errorMessage.style.display = 'none';
+                
+                // Mostrar seção para preenchimento manual imediatamente para evitar bloqueio da interação
+                document.getElementById('dadosEmpresa').classList.remove('hidden');
+                
+                // Armazenar referência ao botão para referência posterior
+                const consultarButton = this;
+                
+                // Indicador de carregamento
+                consultarButton.disabled = true;
+                consultarButton.textContent = 'Consultando...';
+                
+                // Configurar timeout para garantir que o botão seja restaurado se algo der errado
+                const timeoutId = setTimeout(function() {
+                    console.log('Timeout da consulta, restaurando botão');
+                    consultarButton.disabled = false;
+                    consultarButton.textContent = 'Consultar CNPJ';
+                    
+                    // Permitir preenchimento manual já que a consulta falhou
+                    document.querySelectorAll('#razaoSocial, #nomeFantasia, #logradouroEmpresa, #numeroEmpresa, #complementoEmpresa, #bairroEmpresa, #cidadeEmpresa, #estadoEmpresa, #cepEmpresa').forEach(function(el) {
+                        el.readOnly = false;
+                        el.value = '';
+                    });
+                }, 15000); // 15 segundos de timeout
+                
+                // Abordagem direta que não depende de JSONP e não é bloqueada por CORS
+                // Usamos consulta direta ao navegador de dados públicos da ReceitaWS
+                window.open(`https://www.receitaws.com.br/v1/cnpj/${cnpj}/days/20`, '_blank');
+                
+                // Mensagem para o usuário
+                alert('Uma janela foi aberta com os dados do CNPJ. Por favor, copie os dados necessários de lá para este formulário.');
+                
+                // Restaurar o botão, pois redirecionamos o usuário para consultar externamente
+                consultarButton.disabled = false;
+                consultarButton.textContent = 'Consultar CNPJ';
+                
+                // Limpar o timeout já que restauramos o botão imediatamente
+                clearTimeout(timeoutId);
+                
+                // Deixar os campos editáveis para preenchimento manual após consulta externa
+                document.querySelectorAll('#razaoSocial, #nomeFantasia, #logradouroEmpresa, #numeroEmpresa, #complementoEmpresa, #bairroEmpresa, #cidadeEmpresa, #estadoEmpresa, #cepEmpresa').forEach(function(el) {
+                    el.readOnly = false;
+                });
+            });
+
+            // Botão para tornar campos editáveis
+            document.getElementById('editarDadosEmpresa').addEventListener('click', function() {
+                document.querySelectorAll('#razaoSocial, #nomeFantasia, #logradouroEmpresa, #numeroEmpresa, #complementoEmpresa, #bairroEmpresa, #cidadeEmpresa, #estadoEmpresa, #cepEmpresa').forEach(function(el) {
+                    el.readOnly = false;
+                });
+            });
+
+            // Botão para confirmar dados da empresa
+            document.getElementById('confirmarDadosEmpresa').addEventListener('click', function() {
+                nextStep(2);
+            });
+
+            // Controlar visibilidade conforme seleção
+            document.getElementById('tipoProcuracao').addEventListener('change', function() {
+                const errorMessage = this.nextElementSibling;
+                
+                if (this.value) {
+                    errorMessage.style.display = 'none';
+                }
+                
+                // Atualizar campos required
+                updateRequiredFields();
+            });
+
+            // Validação de consentimento
+            document.getElementById('consentimento').addEventListener('change', function() {
+                // Encontrar a mensagem de erro corretamente dentro do mesmo form-group
+                const errorMessage = this.closest('.form-group').querySelector('.error-message');
+                
+                if (this.checked) {
+                    errorMessage.style.display = 'none';
+                } else {
+                    errorMessage.style.display = 'block';
+                }
+            });
+
+            // Submissão do formulário
+            document.getElementById('procuracaoForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Atualizar campos required antes de validar
+                updateRequiredFields();
+                
+                // Verificar consentimento
+                if (!document.getElementById('consentimento').checked) {
+                    alert('É necessário concordar com o uso dos dados para prosseguir.');
+                    return;
+                }
+                
+                // Desabilitar o botão de envio para evitar múltiplos envios
+                const submitButton = document.getElementById('submitButton');
+                submitButton.disabled = true;
+                submitButton.textContent = 'Enviando...';
+                submitButton.classList.add('loading');
+                
+                // Criar um objeto FormData para enviar os dados
+                const formData = new FormData(this);
+                
+                // Adicionar arquivos ao FormData
+                addFilesToFormData(formData);
+                
+                // Adicionar origem e timestamp
+                formData.append('origem', 'formulario_site');
+                formData.append('timestamp', new Date().toISOString());
+                
+                // URL do webhook
+                const webhookUrl = 'https://flow.elegis.com.br/webhook-test/9f9f8057-0c33-4008-90eb-4dcd8e83464c';
+                
+                // Enviar os dados via fetch
+                fetch(webhookUrl, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Erro no servidor: ${response.status}`);
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    console.log('Sucesso:', data);
+                    
+                    // Mostrar página de confirmação
+                    mostrarPaginaConfirmacao();
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    
+                    // Tentar enviar sem os arquivos como fallback
+                    const jsonData = {};
+                    for (const [key, value] of formData.entries()) {
+                        // Ignorar arquivos
+                        if (!(value instanceof File)) {
+                            jsonData[key] = value;
+                        }
+                    }
+                    
+                    // Informação sobre arquivos que deveriam ser enviados
+                    jsonData.arquivos_info = [];
+                    document.querySelectorAll('.file-upload input[type="file"]').forEach(function(fileInput) {
+                        const docType = fileInput.closest('.file-upload').getAttribute('data-doc');
+                        const files = fileInput.files;
+                        
+                        for (let i = 0; i < files.length; i++) {
+                            jsonData.arquivos_info.push({
+                                tipo: docType,
+                                nome: files[i].name,
+                                tamanho: files[i].size
+                            });
+                        }
+                    });
+                    
+                    // Tentar enviar como JSON
+                    return fetch(webhookUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(jsonData)
+                    });
+                })
+                .then(response => {
+                    if (response && !response.ok) {
+                        throw new Error('Falha no envio do backup JSON');
+                    }
+                    if (response) {
+                        return response.text();
+                    }
+                })
+                .then(data => {
+                    if (data) {
+                        console.log('Sucesso no envio de backup:', data);
+                        mostrarPaginaConfirmacao();
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro completo:', error);
+                    alert('Ocorreu um erro ao enviar o formulário. Por favor, tente novamente mais tarde ou entre em contato por WhatsApp.');
+                    
+                    // Reativar o botão
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Enviar Formulário';
+                    submitButton.classList.remove('loading');
+                });
+            });
+            
+            // Função para mostrar a página de confirmação
+            function mostrarPaginaConfirmacao() {
+                // Esconder o formulário
+                document.querySelector('#procuracaoForm').style.display = 'none';
+                
+                // Criar e mostrar a página de confirmação
+                const confirmacao = document.createElement('div');
+                confirmacao.className = 'confirmacao-page';
+                confirmacao.innerHTML = `
+                    <h2>Formulário enviado com sucesso!</h2>
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <p>Seus dados foram recebidos com sucesso.</p>
+                    <p>Em breve você receberá a procuração no WhatsApp informado. Após recebê-la, por favor:</p>
+                    <ul>
+                        <li>Verifique se todos os dados estão corretos</li>
+                        <li>Assine o documento conforme seu documento de identidade</li>
+                        <li>Envie uma foto da procuração assinada para nosso WhatsApp</li>
+                    </ul>
+                    <p>Caso precise corrigir algum dado ou tenha qualquer dúvida, entre em contato pelo WhatsApp <strong>(82) 98194-0903</strong>.</p>
+                    <button type="button" class="btn btn-primary" onclick="window.location.reload()">Preencher novo formulário</button>
+                `;
+                
+                // Adicionar estilos para a página de confirmação
+                const style = document.createElement('style');
+                style.textContent = `
+                    .confirmacao-page {
+                        text-align: center;
+                        padding: 30px;
+                        background-color: white;
+                        border-radius: 10px;
+                        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+                    }
+                    .confirmacao-page h2 {
+                        color: var(--primary-color);
+                        margin-bottom: 20px;
+                    }
+                    .success-icon {
+                        font-size: 80px;
+                        color: var(--success-color);
+                        margin: 30px 0;
+                    }
+                    .confirmacao-page p {
+                        font-size: 18px;
+                        margin-bottom: 20px;
+                        line-height: 1.6;
+                    }
+                    .confirmacao-page ul {
+                        text-align: left;
+                        max-width: 500px;
+                        margin: 20px auto;
+                        padding-left: 20px;
+                    }
+                    .confirmacao-page li {
+                        margin-bottom: 10px;
+                        line-height: 1.5;
+                    }
+                    .confirmacao-page button {
+                        margin-top: 30px;
+                    }
+                `;
+                
+                // Adicionar a página de confirmação ao container
+                document.head.appendChild(style);
+                document.querySelector('.container').appendChild(confirmacao);
+                
+                // Scrollar para o topo
+                window.scrollTo(0, 0);
+            }
+
+            // Executar verificação inicial de campos required
+            updateRequiredFields();
+        });
+    </script>
+</body>
+</html> 
