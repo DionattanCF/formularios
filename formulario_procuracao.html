@@ -1357,11 +1357,173 @@
                     return;
                 }
                 
-                // Aqui você pode implementar o código para enviar o formulário
-                alert('Formulário submetido com sucesso!');
+                // Desabilitar o botão de envio para evitar múltiplos envios
+                const submitButton = document.getElementById('submitButton');
+                submitButton.disabled = true;
+                submitButton.textContent = 'Enviando...';
+                submitButton.classList.add('loading');
                 
-                // Código para o envio real do formulário iria aqui
+                // Criar um objeto FormData para enviar os dados
+                const formData = new FormData(this);
+                
+                // Adicionar arquivos ao FormData
+                addFilesToFormData(formData);
+                
+                // Adicionar origem e timestamp
+                formData.append('origem', 'formulario_site');
+                formData.append('timestamp', new Date().toISOString());
+                
+                // URL do webhook
+                const webhookUrl = 'https://flow.elegis.com.br/webhook-test/9f9f8057-0c33-4008-90eb-4dcd8e83464c';
+                
+                // Enviar os dados via fetch
+                fetch(webhookUrl, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Erro no servidor: ${response.status}`);
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    console.log('Sucesso:', data);
+                    
+                    // Mostrar página de confirmação
+                    mostrarPaginaConfirmacao();
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    
+                    // Tentar enviar sem os arquivos como fallback
+                    const jsonData = {};
+                    for (const [key, value] of formData.entries()) {
+                        // Ignorar arquivos
+                        if (!(value instanceof File)) {
+                            jsonData[key] = value;
+                        }
+                    }
+                    
+                    // Informação sobre arquivos que deveriam ser enviados
+                    jsonData.arquivos_info = [];
+                    document.querySelectorAll('.file-upload input[type="file"]').forEach(function(fileInput) {
+                        const docType = fileInput.closest('.file-upload').getAttribute('data-doc');
+                        const files = fileInput.files;
+                        
+                        for (let i = 0; i < files.length; i++) {
+                            jsonData.arquivos_info.push({
+                                tipo: docType,
+                                nome: files[i].name,
+                                tamanho: files[i].size
+                            });
+                        }
+                    });
+                    
+                    // Tentar enviar como JSON
+                    return fetch(webhookUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(jsonData)
+                    });
+                })
+                .then(response => {
+                    if (response && !response.ok) {
+                        throw new Error('Falha no envio do backup JSON');
+                    }
+                    if (response) {
+                        return response.text();
+                    }
+                })
+                .then(data => {
+                    if (data) {
+                        console.log('Sucesso no envio de backup:', data);
+                        mostrarPaginaConfirmacao();
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro completo:', error);
+                    alert('Ocorreu um erro ao enviar o formulário. Por favor, tente novamente mais tarde ou entre em contato por WhatsApp.');
+                    
+                    // Reativar o botão
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Enviar Formulário';
+                    submitButton.classList.remove('loading');
+                });
             });
+            
+            // Função para mostrar a página de confirmação
+            function mostrarPaginaConfirmacao() {
+                // Esconder o formulário
+                document.querySelector('#procuracaoForm').style.display = 'none';
+                
+                // Criar e mostrar a página de confirmação
+                const confirmacao = document.createElement('div');
+                confirmacao.className = 'confirmacao-page';
+                confirmacao.innerHTML = `
+                    <h2>Formulário enviado com sucesso!</h2>
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <p>Seus dados foram recebidos com sucesso.</p>
+                    <p>Em breve você receberá a procuração no WhatsApp informado. Após recebê-la, por favor:</p>
+                    <ul>
+                        <li>Verifique se todos os dados estão corretos</li>
+                        <li>Assine o documento conforme seu documento de identidade</li>
+                        <li>Envie uma foto da procuração assinada para nosso WhatsApp</li>
+                    </ul>
+                    <p>Caso precise corrigir algum dado ou tenha qualquer dúvida, entre em contato pelo WhatsApp <strong>(82) 98194-0903</strong>.</p>
+                    <button type="button" class="btn btn-primary" onclick="window.location.reload()">Preencher novo formulário</button>
+                `;
+                
+                // Adicionar estilos para a página de confirmação
+                const style = document.createElement('style');
+                style.textContent = `
+                    .confirmacao-page {
+                        text-align: center;
+                        padding: 30px;
+                        background-color: white;
+                        border-radius: 10px;
+                        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+                    }
+                    .confirmacao-page h2 {
+                        color: var(--primary-color);
+                        margin-bottom: 20px;
+                    }
+                    .success-icon {
+                        font-size: 80px;
+                        color: var(--success-color);
+                        margin: 30px 0;
+                    }
+                    .confirmacao-page p {
+                        font-size: 18px;
+                        margin-bottom: 20px;
+                        line-height: 1.6;
+                    }
+                    .confirmacao-page ul {
+                        text-align: left;
+                        max-width: 500px;
+                        margin: 20px auto;
+                        padding-left: 20px;
+                    }
+                    .confirmacao-page li {
+                        margin-bottom: 10px;
+                        line-height: 1.5;
+                    }
+                    .confirmacao-page button {
+                        margin-top: 30px;
+                    }
+                `;
+                
+                // Adicionar a página de confirmação ao container
+                document.head.appendChild(style);
+                document.querySelector('.container').appendChild(confirmacao);
+                
+                // Scrollar para o topo
+                window.scrollTo(0, 0);
+            }
 
             // Executar verificação inicial de campos required
             updateRequiredFields();
