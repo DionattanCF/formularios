@@ -1254,7 +1254,8 @@
 
             // Validação de consentimento
             document.getElementById('consentimento').addEventListener('change', function() {
-                const errorMessage = this.nextElementSibling.nextElementSibling;
+                // Encontrar a mensagem de erro corretamente dentro do mesmo form-group
+                const errorMessage = this.closest('.form-group').querySelector('.error-message');
                 
                 if (this.checked) {
                     errorMessage.style.display = 'none';
