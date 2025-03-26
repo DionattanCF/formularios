@@ -1184,16 +1184,30 @@
                 // Indicador de carregamento
                 this.disabled = true;
                 this.textContent = 'Consultando...';
+
+                // URL da API
+                const apiUrl = `https://brasilapi.com.br/api/cnpj/v1/${cnpj}`;
+                console.log('Consultando CNPJ:', cnpj);
+                console.log('URL da API:', apiUrl);
                 
                 // Consulta da API
-                fetch(`https://brasilapi.com.br/api/cnpj/v1/${cnpj}`)
+                fetch(apiUrl)
                     .then(response => {
+                        console.log('Status da resposta:', response.status);
+                        console.log('OK:', response.ok);
+                        
                         if (!response.ok) {
-                            throw new Error('Erro ao consultar CNPJ');
+                            return response.text().then(text => {
+                                console.error('Erro na resposta:', text);
+                                throw new Error(`Erro ao consultar CNPJ: ${response.status} ${response.statusText}`);
+                            });
                         }
+                        
                         return response.json();
                     })
                     .then(data => {
+                        console.log('Dados recebidos:', data);
+                        
                         // Preencher os campos com os dados da empresa
                         document.getElementById('razaoSocial').value = data.razao_social || '';
                         document.getElementById('nomeFantasia').value = data.nome_fantasia || data.razao_social || '';
@@ -1218,8 +1232,13 @@
                         updateRequiredFields();
                     })
                     .catch(error => {
-                        console.error('Erro na consulta:', error);
-                        alert('Erro ao consultar CNPJ. Verifique os dados e tente novamente.');
+                        console.error('Erro completo:', error);
+                        alert('Erro ao consultar CNPJ: ' + error.message);
+
+                        // Alternativa: tentar com a API ReceitaWS
+                        if (window.confirm('Houve um problema com a consulta do CNPJ. Deseja tentar uma API alternativa?')) {
+                            consultarCNPJReceitaWS(cnpj);
+                        }
                     })
                     .finally(() => {
                         // Restaurar o botão
@@ -1227,6 +1246,67 @@
                         this.textContent = 'Consultar CNPJ';
                     });
             });
+
+            // Implementação alternativa usando ReceitaWS (deixar comentado até ser necessário)
+            function consultarCNPJReceitaWS(cnpj) {
+                const corsProxy = 'https://corsproxy.io/?';
+                const apiUrl = `${corsProxy}https://receitaws.com.br/v1/cnpj/${cnpj}`;
+                
+                console.log('Tentando API alternativa:', apiUrl);
+                
+                fetch(apiUrl)
+                    .then(response => {
+                        console.log('Status ReceitaWS:', response.status);
+                        if (!response.ok) {
+                            return response.text().then(text => {
+                                console.error('Erro ReceitaWS:', text);
+                                throw new Error('Falha na consulta alternativa');
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Dados ReceitaWS:', data);
+                        
+                        if (data.status === 'ERROR') {
+                            throw new Error(data.message || 'Erro na consulta alternativa');
+                        }
+                        
+                        // Preencher campos com formato diferente da ReceitaWS
+                        document.getElementById('razaoSocial').value = data.nome || '';
+                        document.getElementById('nomeFantasia').value = data.fantasia || data.nome || '';
+                        document.getElementById('logradouroEmpresa').value = data.logradouro || '';
+                        document.getElementById('numeroEmpresa').value = data.numero || '';
+                        document.getElementById('complementoEmpresa').value = data.complemento || '';
+                        document.getElementById('bairroEmpresa').value = data.bairro || '';
+                        document.getElementById('cidadeEmpresa').value = data.municipio || '';
+                        document.getElementById('estadoEmpresa').value = data.uf || '';
+                        document.getElementById('cepEmpresa').value = data.cep ? data.cep.replace('.', '') : '';
+                        
+                        // Campos que não vêm da API
+                        document.getElementById('emailEmpresa').value = data.email || '';
+                        document.getElementById('emailEmpresa').readOnly = false;
+                        document.getElementById('cargoEmpresa').value = '';
+                        document.getElementById('cargoEmpresa').readOnly = false;
+                        
+                        // Mostrar seção de dados da empresa
+                        document.getElementById('dadosEmpresa').classList.remove('hidden');
+                        
+                        // Atualizar campos required
+                        updateRequiredFields();
+                    })
+                    .catch(error => {
+                        console.error('Erro ReceitaWS completo:', error);
+                        alert('Não foi possível consultar o CNPJ. Por favor, preencha os dados manualmente.');
+                        
+                        // Mostrar seção para preenchimento manual
+                        document.getElementById('dadosEmpresa').classList.remove('hidden');
+                        document.querySelectorAll('#razaoSocial, #nomeFantasia, #logradouroEmpresa, #numeroEmpresa, #complementoEmpresa, #bairroEmpresa, #cidadeEmpresa, #estadoEmpresa, #cepEmpresa').forEach(function(el) {
+                            el.readOnly = false;
+                            el.value = '';
+                        });
+                    });
+            }
 
             // Botão para tornar campos editáveis
             document.getElementById('editarDadosEmpresa').addEventListener('click', function() {
