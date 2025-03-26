@@ -230,6 +230,176 @@
                 font-size: 20px;
             }
         }
+
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .steps::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gray-medium);
+            z-index: 1;
+        }
+
+        .step {
+            position: relative;
+            z-index: 2;
+            background: white;
+            padding: 0 15px;
+            text-align: center;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gray-medium);
+            color: #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .step.active .step-number {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .step.completed .step-number {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .step-title {
+            font-size: 14px;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+
+        .step.active .step-title {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .step.completed .step-title {
+            color: var(--success-color);
+        }
+
+        .step-content {
+            display: none;
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-secondary {
+            background: var(--gray-medium);
+            color: var(--dark-color);
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .file-upload {
+            border: 2px dashed var(--gray-medium);
+            border-radius: 6px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload:hover {
+            border-color: var(--primary-color);
+            background: rgba(0, 51, 102, 0.05);
+        }
+
+        .file-upload input[type="file"] {
+            display: none;
+        }
+
+        .file-upload i {
+            font-size: 24px;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .file-list {
+            margin-top: 15px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            background: var(--gray-light);
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+
+        .file-item .file-name {
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        .file-item .remove-file {
+            color: #dc3545;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .document-info {
+            background: var(--gray-light);
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #666;
+        }
     </style>
 </head>
 <body>
@@ -240,6 +410,54 @@
         </div>
 
         <form id="procuracaoForm">
+            <!-- Navegação entre etapas -->
+            <div class="steps">
+                <div class="step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Tipo de Procuração</div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Dados Específicos</div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Dados Pessoais</div>
+                </div>
+                <div class="step" data-step="4">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Documentos</div>
+                </div>
+            </div>
+
+            <!-- Etapa 1: Tipo de Procuração -->
+            <div class="step-content active" data-step="1">
+                <div class="form-section">
+                    <h2 class="form-section-title">Seção 1</h2>
+                    <div class="form-group">
+                        <label class="required">1.1 - Marque uma das opções abaixo</label>
+                        <select id="tipoProcuracao" required>
+                            <option value="">Selecione uma opção</option>
+                            <option value="pessoa_fisica">Pessoa Física</option>
+                            <option value="pessoa_juridica">Pessoa Jurídica</option>
+                            <option value="partido">Partido Político ou Federações</option>
+                            <option value="coligacao">Coligação - Representante de Coligação</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="navigation-buttons">
+                    <button type="button" class="btn btn-primary" onclick="nextStep(1)">Próximo</button>
+                </div>
+            </div>
+
+            <!-- Etapa 2: Dados Específicos -->
+            <div class="step-content" data-step="2">
+                <div id="partidoSection" class="form-section hidden">
+                    <h2 class="form-section-title">Dados do Partido</h2>
+                    <div class="form-group">
+                        <label class="required">2 - Qual o nome do Partido, Comissão Provisória ou Diretório</label>
+                        <input type="text" name="nomePartido" required>
+                    </div>
             <!-- Seção 1: Tipo de Procuração -->
             <div class="form-section">
                 <h2 class="form-section-title">Seção 1</h2>
@@ -252,15 +470,6 @@
                         <option value="partido">Partido Político ou Federações</option>
                         <option value="coligacao">Coligação - Representante de Coligação</option>
                     </select>
-                </div>
-                <div class="orientation">
-                    <strong>Orientação:</strong> Conforme escolha a ramificação deve ir para os próximos campos.
-                    <ul>
-                        <li>Pessoa Física deve seguir para Dados Pessoais</li>
-                        <li>Pessoa Jurídica após preenchida com os campos necessários deve seguir para dados pessoais</li>
-                        <li>Partido Político ou federação após preenchida com os campos necessários deve seguir para dados pessoais</li>
-                        <li>Coligação - Representante de Coligação após preenchida com os campos necessários deve seguir para dados pessoais</li>
-                    </ul>
                 </div>
             </div>
 
@@ -584,8 +793,14 @@
                 
                 // Mostra a seção selecionada
                 if (selectedValue) {
-                    $(`#${selectedValue}Section`).removeClass('hidden');
-                    $('#dadosPessoaisSection').removeClass('hidden');
+                    if (selectedValue === 'pessoa_fisica') {
+                        // Pessoa Física vai direto para Dados Pessoais
+                        $('#dadosPessoaisSection').removeClass('hidden');
+                    } else {
+                        // Outras opções mostram seus campos específicos e depois Dados Pessoais
+                        $(`#${selectedValue}Section`).removeClass('hidden');
+                        $('#dadosPessoaisSection').removeClass('hidden');
+                    }
                 }
             });
 
