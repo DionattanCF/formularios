@@ -400,6 +400,23 @@
             font-size: 14px;
             color: #666;
         }
+
+        .consentimento-box {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .consentimento-box input[type="checkbox"] {
+            width: auto;
+            margin-top: 4px;
+        }
+
+        .consentimento-box label {
+            margin-bottom: 0;
+            font-weight: normal;
+        }
     </style>
 </head>
 <body>
@@ -443,10 +460,11 @@
                             <option value="partido">Partido Político ou Federações</option>
                             <option value="coligacao">Coligação - Representante de Coligação</option>
                         </select>
+                        <div class="error-message">Selecione uma opção para prosseguir</div>
                     </div>
                 </div>
                 <div class="navigation-buttons">
-                    <button type="button" class="btn btn-primary" onclick="nextStep(1)">Próximo</button>
+                    <button type="button" class="btn btn-primary" id="nextStep1">Próximo</button>
                 </div>
             </div>
 
@@ -458,208 +476,182 @@
                         <label class="required">2 - Qual o nome do Partido, Comissão Provisória ou Diretório</label>
                         <input type="text" name="nomePartido" required>
                     </div>
-            <!-- Seção 1: Tipo de Procuração -->
-            <div class="form-section">
-                <h2 class="form-section-title">Seção 1</h2>
-                <div class="form-group">
-                    <label class="required">1.1 - Marque uma das opções abaixo</label>
-                    <select id="tipoProcuracao" required>
-                        <option value="">Selecione uma opção</option>
-                        <option value="pessoa_fisica">Pessoa Física</option>
-                        <option value="pessoa_juridica">Pessoa Jurídica</option>
-                        <option value="partido">Partido Político ou Federações</option>
-                        <option value="coligacao">Coligação - Representante de Coligação</option>
-                    </select>
                 </div>
-            </div>
-
-            <!-- Seção Partido Político -->
-            <div id="partidoSection" class="form-section hidden">
-                <h2 class="form-section-title">Dados do Partido</h2>
-                <div class="form-group">
-                    <label class="required">2 - Qual o nome do Partido, Comissão Provisória ou Diretório</label>
-                    <input type="text" name="nomePartido" required>
-                </div>
-                <div class="form-group">
-                    <label class="required">3 - Informe seu email para eventual comunicação</label>
-                    <input type="email" name="emailPartido" required>
-                </div>
-                <div class="form-group">
-                    <label class="required">4 - Qual o endereço completo da sede do partido</label>
-                    <textarea name="enderecoPartido" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label class="required">5 - Informe o CNPJ do partido</label>
-                    <input type="text" name="cnpjPartido" class="cnpj" required>
-                    <div class="error-message">CNPJ inválido</div>
-                </div>
-                <div class="form-group">
-                    <label class="required">6 - Qual cargo ocupado no Partido</label>
-                    <select name="cargoPartido" required>
-                        <option value="">Selecione uma opção</option>
-                        <option value="presidente">Presidente</option>
-                        <option value="tesoureiro">Tesoureiro</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Seção Pessoa Jurídica -->
-            <div id="pessoaJuridicaSection" class="form-section hidden">
-                <h2 class="form-section-title">Dados da Empresa</h2>
-                <div class="form-group">
-                    <label class="required">22 - Informe seu email</label>
-                    <input type="email" name="emailEmpresa" required>
-                </div>
-                <div class="form-group">
-                    <label class="required">23 - Qual o nome da Empresa ou a Razão Social</label>
-                    <input type="text" name="razaoSocial" required>
-                </div>
-                <div class="form-group">
-                    <label class="required">24 - Qual o endereço completo da sede da empresa</label>
-                    <textarea name="enderecoEmpresa" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label class="required">25 - Informe o CNPJ da empresa</label>
-                    <input type="text" name="cnpjEmpresa" class="cnpj" required>
-                    <div class="error-message">CNPJ inválido</div>
-                </div>
-                <div class="form-group">
-                    <label class="required">26 - Qual cargo ocupado na empresa</label>
-                    <input type="text" name="cargoEmpresa" required>
-                </div>
-            </div>
-
-            <!-- Seção Coligação -->
-            <div id="coligacaoSection" class="form-section hidden">
-                <h2 class="form-section-title">Dados da Coligação</h2>
-                <div class="form-group">
-                    <label class="required">18 - Qual o nome da Coligação</label>
-                    <input type="text" name="nomeColigacao" required>
-                </div>
-                <div class="form-group">
-                    <label class="required">20 - Informe seu email</label>
-                    <input type="email" name="emailColigacao" required>
-                </div>
-                <div class="form-group">
-                    <label class="required">21 - Qual o endereço da coligação?</label>
-                    <textarea name="enderecoColigacao" required></textarea>
-                </div>
-            </div>
-
-            <!-- Seção Dados Pessoais -->
-            <div id="dadosPessoaisSection" class="form-section hidden">
-                <h2 class="form-section-title">Dados Pessoais</h2>
-                <div class="form-group">
-                    <label class="required">7 - Nome Completo</label>
-                    <input type="text" name="nomeCompleto" required>
-                </div>
-                <div class="form-group">
-                    <label class="required">8 - Data de Nascimento</label>
-                    <input type="date" name="dataNascimento" required>
-                </div>
-                <div class="form-group">
-                    <label class="required">9 - Nome da Mãe</label>
-                    <input type="text" name="nomeMae" required>
-                </div>
-                <div class="form-group">
-                    <label class="required">10 - Qual sua atividade profissional?</label>
-                    <input type="text" name="atividadeProfissional" required>
-                </div>
-                <div class="form-group">
-                    <label class="required">11 - Qual seu Estado Civil?</label>
-                    <select name="estadoCivil" required>
-                        <option value="">Selecione uma opção</option>
-                        <option value="casado">Casado</option>
-                        <option value="casada">Casada</option>
-                        <option value="separado">Separado Judicialmente</option>
-                        <option value="solteiro">Solteiro</option>
-                        <option value="solteira">Solteira</option>
-                        <option value="viuvo">Viúvo</option>
-                        <option value="viuva">Viúva</option>
-                        <option value="convivente">Convivente</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="required">12 - Naturalidade</label>
-                    <input type="text" name="naturalidade" required>
-                </div>
-                <div class="form-group">
-                    <label class="required">13 - N° Celular com WhatsApp</label>
-                    <input type="text" name="celular" class="telefone" required>
-                    <div class="error-message">Digite apenas números, sem o 9 inicial</div>
-                </div>
-                <div class="form-group">
-                    <label class="required">14 - Número do RG</label>
-                    <input type="text" name="rg" required>
-                </div>
-                <div class="form-group">
-                    <label class="required">15 - Número do CPF</label>
-                    <input type="text" name="cpf" class="cpf" required>
-                    <div class="error-message">CPF inválido</div>
-                </div>
-                <div class="form-group">
-                    <label>16 - Número do Título Eleitoral</label>
-                    <input type="text" name="tituloEleitoral">
-                </div>
-                <div class="form-group">
-                    <label class="required">17 - Endereço Completo</label>
-                    <div class="form-row">
-                        <input type="text" name="cep" class="cep" placeholder="CEP" required>
-                        <button type="button" id="buscarCep" class="btn-secondary">Buscar CEP</button>
+                <div id="pessoaJuridicaSection" class="form-section hidden">
+                    <h2 class="form-section-title">Dados da Empresa</h2>
+                    <div class="form-group">
+                        <label class="required">22 - Informe seu email</label>
+                        <input type="email" name="emailEmpresa" required>
                     </div>
-                    <input type="text" name="logradouro" placeholder="Logradouro" required>
-                    <input type="text" name="numero" placeholder="Número" required>
-                    <input type="text" name="complemento" placeholder="Complemento">
-                    <input type="text" name="bairro" placeholder="Bairro" required>
-                    <input type="text" name="cidade" placeholder="Cidade" required>
-                    <select name="estado" required>
-                        <option value="">Selecione o Estado</option>
-                        <option value="AC">Acre</option>
-                        <option value="AL">Alagoas</option>
-                        <option value="AP">Amapá</option>
-                        <option value="AM">Amazonas</option>
-                        <option value="BA">Bahia</option>
-                        <option value="CE">Ceará</option>
-                        <option value="DF">Distrito Federal</option>
-                        <option value="ES">Espírito Santo</option>
-                        <option value="GO">Goiás</option>
-                        <option value="MA">Maranhão</option>
-                        <option value="MT">Mato Grosso</option>
-                        <option value="MS">Mato Grosso do Sul</option>
-                        <option value="MG">Minas Gerais</option>
-                        <option value="PA">Pará</option>
-                        <option value="PB">Paraíba</option>
-                        <option value="PR">Paraná</option>
-                        <option value="PE">Pernambuco</option>
-                        <option value="PI">Piauí</option>
-                        <option value="RJ">Rio de Janeiro</option>
-                        <option value="RN">Rio Grande do Norte</option>
-                        <option value="RS">Rio Grande do Sul</option>
-                        <option value="RO">Rondônia</option>
-                        <option value="RR">Roraima</option>
-                        <option value="SC">Santa Catarina</option>
-                        <option value="SP">São Paulo</option>
-                        <option value="SE">Sergipe</option>
-                        <option value="TO">Tocantins</option>
-                    </select>
+                    <div class="form-group">
+                        <label class="required">23 - Qual o nome da Empresa ou a Razão Social</label>
+                        <input type="text" name="razaoSocial" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">24 - Qual o endereço completo da sede da empresa</label>
+                        <textarea name="enderecoEmpresa" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">25 - Informe o CNPJ da empresa</label>
+                        <input type="text" name="cnpjEmpresa" class="cnpj" required>
+                        <div class="error-message">CNPJ inválido</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">26 - Qual cargo ocupado na empresa</label>
+                        <input type="text" name="cargoEmpresa" required>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label class="required">18 - Finalidade da Procuração</label>
-                    <select name="finalidade" required>
-                        <option value="">Selecione uma opção</option>
-                        <option value="propor_acoes">Propor e defender ações</option>
-                        <option value="prestacao_contas">Acompanhar Prestação de Contas Eleitoral</option>
-                        <option value="acompanhar_processo">Acompanhar processo</option>
-                    </select>
+                <div id="coligacaoSection" class="form-section hidden">
+                    <h2 class="form-section-title">Dados da Coligação</h2>
+                    <div class="form-group">
+                        <label class="required">18 - Qual o nome da Coligação</label>
+                        <input type="text" name="nomeColigacao" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">20 - Informe seu email</label>
+                        <input type="email" name="emailColigacao" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">21 - Qual o endereço da coligação?</label>
+                        <textarea name="enderecoColigacao" required></textarea>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label class="required">19 - Data da Procuração</label>
-                    <input type="date" name="dataProcuracao" required>
+                <div id="dadosPessoaisSection" class="form-section hidden">
+                    <h2 class="form-section-title">Dados Pessoais</h2>
+                    <div class="form-group">
+                        <label class="required">7 - Nome Completo</label>
+                        <input type="text" name="nomeCompleto" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">8 - Data de Nascimento</label>
+                        <input type="date" name="dataNascimento" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">9 - Nome da Mãe</label>
+                        <input type="text" name="nomeMae" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">10 - Qual sua atividade profissional?</label>
+                        <input type="text" name="atividadeProfissional" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">11 - Qual seu Estado Civil?</label>
+                        <select name="estadoCivil" required>
+                            <option value="">Selecione uma opção</option>
+                            <option value="casado">Casado</option>
+                            <option value="casada">Casada</option>
+                            <option value="separado">Separado Judicialmente</option>
+                            <option value="solteiro">Solteiro</option>
+                            <option value="solteira">Solteira</option>
+                            <option value="viuvo">Viúvo</option>
+                            <option value="viuva">Viúva</option>
+                            <option value="convivente">Convivente</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">12 - Naturalidade</label>
+                        <input type="text" name="naturalidade" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">13 - N° Celular com WhatsApp</label>
+                        <input type="text" name="celular" class="telefone" required>
+                        <div class="error-message">Digite apenas números, sem o 9 inicial</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">14 - Número do RG</label>
+                        <input type="text" name="rg" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">15 - Número do CPF</label>
+                        <input type="text" name="cpf" class="cpf" required>
+                        <div class="error-message">CPF inválido</div>
+                    </div>
+                    <div class="form-group">
+                        <label>16 - Número do Título Eleitoral</label>
+                        <input type="text" name="tituloEleitoral">
+                    </div>
+                    <div class="form-group">
+                        <label class="required">17 - Endereço Completo</label>
+                        <div class="form-row">
+                            <input type="text" name="cep" class="cep" placeholder="CEP" required>
+                            <button type="button" id="buscarCep" class="btn-secondary">Buscar CEP</button>
+                        </div>
+                        <input type="text" name="logradouro" placeholder="Logradouro" required>
+                        <input type="text" name="numero" placeholder="Número" required>
+                        <input type="text" name="complemento" placeholder="Complemento">
+                        <input type="text" name="bairro" placeholder="Bairro" required>
+                        <input type="text" name="cidade" placeholder="Cidade" required>
+                        <select name="estado" required>
+                            <option value="">Selecione o Estado</option>
+                            <option value="AC">Acre</option>
+                            <option value="AL">Alagoas</option>
+                            <option value="AP">Amapá</option>
+                            <option value="AM">Amazonas</option>
+                            <option value="BA">Bahia</option>
+                            <option value="CE">Ceará</option>
+                            <option value="DF">Distrito Federal</option>
+                            <option value="ES">Espírito Santo</option>
+                            <option value="GO">Goiás</option>
+                            <option value="MA">Maranhão</option>
+                            <option value="MT">Mato Grosso</option>
+                            <option value="MS">Mato Grosso do Sul</option>
+                            <option value="MG">Minas Gerais</option>
+                            <option value="PA">Pará</option>
+                            <option value="PB">Paraíba</option>
+                            <option value="PR">Paraná</option>
+                            <option value="PE">Pernambuco</option>
+                            <option value="PI">Piauí</option>
+                            <option value="RJ">Rio de Janeiro</option>
+                            <option value="RN">Rio Grande do Norte</option>
+                            <option value="RS">Rio Grande do Sul</option>
+                            <option value="RO">Rondônia</option>
+                            <option value="RR">Roraima</option>
+                            <option value="SC">Santa Catarina</option>
+                            <option value="SP">São Paulo</option>
+                            <option value="SE">Sergipe</option>
+                            <option value="TO">Tocantins</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">18 - Finalidade da Procuração</label>
+                        <select name="finalidade" required>
+                            <option value="">Selecione uma opção</option>
+                            <option value="propor_acoes">Propor e defender ações</option>
+                            <option value="prestacao_contas">Acompanhar Prestação de Contas Eleitoral</option>
+                            <option value="acompanhar_processo">Acompanhar processo</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">19 - Data da Procuração</label>
+                        <input type="date" name="dataProcuracao" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">20 - Consentimento para uso dos dados</label>
+                        <div class="consentimento-box">
+                            <input type="checkbox" id="consentimento" name="consentimento" required>
+                            <label for="consentimento">Declaro que autorizo o uso dos dados fornecidos para a elaboração da procuração e outros documentos necessários ao fiel cumprimento dos poderes outorgados.</label>
+                        </div>
+                        <div class="error-message">É necessário concordar com o uso dos dados para prosseguir</div>
+                    </div>
                 </div>
+                <div class="navigation-buttons">
+                    <button type="button" class="btn btn-primary" id="nextStep2">Próximo</button>
+                    <button type="button" class="btn btn-secondary" id="prevStep2">Anterior</button>
+                </div>
+            </div>
+
+            <!-- Etapa 3: Dados Pessoais -->
+            <div class="step-content" data-step="3">
+                <!-- Conteúdo da etapa 3 -->
+            </div>
+
+            <!-- Etapa 4: Documentos -->
+            <div class="step-content" data-step="4">
+                <!-- Conteúdo da etapa 4 -->
             </div>
 
             <div class="required-note">* Campos obrigatórios</div>
-            <button type="submit" id="submitButton">Enviar Formulário</button>
+            <button type="submit" id="submitButton" class="hidden">Enviar Formulário</button>
         </form>
     </div>
 
@@ -670,6 +662,49 @@
             $('.cnpj').mask('00.000.000/0000-00');
             $('.telefone').mask('(00) 00000-0000');
             $('.cep').mask('00000-000');
+
+            // Funções de navegação
+            function nextStep(step) {
+                if (step < 4) {
+                    $('.step-content[data-step="' + step + '"]').removeClass('active');
+                    $('.step-content[data-step="' + (step + 1) + '"]').addClass('active');
+                    
+                    $('.step[data-step="' + step + '"]').removeClass('active').addClass('completed');
+                    $('.step[data-step="' + (step + 1) + '"]').addClass('active');
+                }
+            }
+
+            function prevStep(step) {
+                if (step > 1) {
+                    $('.step-content[data-step="' + step + '"]').removeClass('active');
+                    $('.step-content[data-step="' + (step - 1) + '"]').addClass('active');
+                    
+                    $('.step[data-step="' + step + '"]').removeClass('active');
+                    $('.step[data-step="' + (step - 1) + '"]').addClass('active').removeClass('completed');
+                }
+            }
+
+            // Event listeners para navegação
+            $('#nextStep1').click(function() {
+                const tipoProcuracao = $('#tipoProcuracao').val();
+                const errorMessage = $('#tipoProcuracao').next('.error-message');
+                
+                if (!tipoProcuracao) {
+                    errorMessage.show();
+                    return;
+                }
+                
+                errorMessage.hide();
+                nextStep(1);
+            });
+
+            $('#nextStep2').click(function() {
+                nextStep(2);
+            });
+
+            $('#prevStep2').click(function() {
+                prevStep(2);
+            });
 
             // Validação de CPF
             function validarCPF(cpf) {
@@ -787,20 +822,29 @@
             // Controle de exibição das seções
             $('#tipoProcuracao').change(function() {
                 const selectedValue = $(this).val();
+                const errorMessage = $(this).next('.error-message');
                 
                 // Esconde todas as seções
-                $('#partidoSection, #pessoaJuridicaSection, #coligacaoSection, #dadosPessoaisSection').addClass('hidden');
+                $('#partidoSection, #pessoaJuridicaSection, #coligacaoSection').addClass('hidden');
                 
                 // Mostra a seção selecionada
+                if (selectedValue && selectedValue !== 'pessoa_fisica') {
+                    $(`#${selectedValue}Section`).removeClass('hidden');
+                }
+                
+                // Esconde mensagem de erro se uma opção for selecionada
                 if (selectedValue) {
-                    if (selectedValue === 'pessoa_fisica') {
-                        // Pessoa Física vai direto para Dados Pessoais
-                        $('#dadosPessoaisSection').removeClass('hidden');
-                    } else {
-                        // Outras opções mostram seus campos específicos e depois Dados Pessoais
-                        $(`#${selectedValue}Section`).removeClass('hidden');
-                        $('#dadosPessoaisSection').removeClass('hidden');
-                    }
+                    errorMessage.hide();
+                }
+            });
+
+            // Validação do consentimento
+            $('#consentimento').change(function() {
+                const errorMessage = $(this).next('.error-message');
+                if ($(this).is(':checked')) {
+                    errorMessage.hide();
+                } else {
+                    errorMessage.show();
                 }
             });
 
