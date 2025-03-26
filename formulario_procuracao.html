@@ -6,6 +6,7 @@
     <title>Procuração Coutrin & Figueiredo Advogados Associados</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary-color: #003366;
@@ -457,8 +458,7 @@
                             <option value="">Selecione uma opção</option>
                             <option value="pessoa_fisica">Pessoa Física</option>
                             <option value="pessoa_juridica">Pessoa Jurídica</option>
-                            <option value="partido">Partido Político ou Federações</option>
-                            <option value="coligacao">Coligação - Representante de Coligação</option>
+                            <option value="coligacao">Coligação</option>
                         </select>
                         <div class="error-message">Selecione uma opção para prosseguir</div>
                     </div>
@@ -480,25 +480,65 @@
                 <div id="pessoaJuridicaSection" class="form-section hidden">
                     <h2 class="form-section-title">Dados da Empresa</h2>
                     <div class="form-group">
-                        <label class="required">22 - Informe seu email</label>
-                        <input type="email" name="emailEmpresa" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="required">23 - Qual o nome da Empresa ou a Razão Social</label>
-                        <input type="text" name="razaoSocial" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="required">24 - Qual o endereço completo da sede da empresa</label>
-                        <textarea name="enderecoEmpresa" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label class="required">25 - Informe o CNPJ da empresa</label>
-                        <input type="text" name="cnpjEmpresa" class="cnpj" required>
+                        <label class="required">CNPJ da Empresa</label>
+                        <div class="form-row" style="display: flex; gap: 10px; margin-bottom: 10px;">
+                            <input type="text" name="cnpjEmpresa" id="cnpjEmpresa" class="cnpj" style="flex: 1;" required>
+                            <button type="button" id="consultarCNPJ" class="btn-secondary" style="width: auto; margin: 0;">Consultar CNPJ</button>
+                        </div>
                         <div class="error-message">CNPJ inválido</div>
                     </div>
-                    <div class="form-group">
-                        <label class="required">26 - Qual cargo ocupado na empresa</label>
-                        <input type="text" name="cargoEmpresa" required>
+                    <div id="dadosEmpresa" class="hidden">
+                        <div class="form-group">
+                            <label class="required">Razão Social</label>
+                            <input type="text" name="razaoSocial" id="razaoSocial" readonly required>
+                        </div>
+                        <div class="form-group">
+                            <label class="required">Nome Fantasia</label>
+                            <input type="text" name="nomeFantasia" id="nomeFantasia" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="required">Endereço</label>
+                            <input type="text" name="logradouroEmpresa" id="logradouroEmpresa" readonly required>
+                        </div>
+                        <div class="form-group">
+                            <label class="required">Número</label>
+                            <input type="text" name="numeroEmpresa" id="numeroEmpresa" readonly required>
+                        </div>
+                        <div class="form-group">
+                            <label>Complemento</label>
+                            <input type="text" name="complementoEmpresa" id="complementoEmpresa" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="required">Bairro</label>
+                            <input type="text" name="bairroEmpresa" id="bairroEmpresa" readonly required>
+                        </div>
+                        <div class="form-group">
+                            <label class="required">Cidade</label>
+                            <input type="text" name="cidadeEmpresa" id="cidadeEmpresa" readonly required>
+                        </div>
+                        <div class="form-group">
+                            <label class="required">Estado</label>
+                            <input type="text" name="estadoEmpresa" id="estadoEmpresa" readonly required>
+                        </div>
+                        <div class="form-group">
+                            <label class="required">CEP</label>
+                            <input type="text" name="cepEmpresa" id="cepEmpresa" readonly required>
+                        </div>
+                        <div class="form-group">
+                            <label class="required">Email para contato</label>
+                            <input type="email" name="emailEmpresa" id="emailEmpresa" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="required">Cargo ocupado na empresa</label>
+                            <input type="text" name="cargoEmpresa" required>
+                        </div>
+                        <div class="form-group">
+                            <p>Os dados acima estão corretos?</p>
+                            <div style="display: flex; gap: 20px;">
+                                <button type="button" id="confirmarDadosEmpresa" class="btn btn-primary" style="width: auto; margin: 0;">Sim, prosseguir</button>
+                                <button type="button" id="editarDadosEmpresa" class="btn btn-secondary" style="width: auto; margin: 0;">Não, editar dados</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div id="coligacaoSection" class="form-section hidden">
@@ -516,7 +556,15 @@
                         <textarea name="enderecoColigacao" required></textarea>
                     </div>
                 </div>
-                <div id="dadosPessoaisSection" class="form-section hidden">
+                <div class="navigation-buttons">
+                    <button type="button" class="btn btn-primary" id="nextStep2">Próximo</button>
+                    <button type="button" class="btn btn-secondary" id="prevStep2">Anterior</button>
+                </div>
+            </div>
+
+            <!-- Etapa 3: Dados Pessoais -->
+            <div class="step-content" data-step="3">
+                <div id="dadosPessoaisSection" class="form-section">
                     <h2 class="form-section-title">Dados Pessoais</h2>
                     <div class="form-group">
                         <label class="required">7 - Nome Completo</label>
@@ -635,19 +683,64 @@
                     </div>
                 </div>
                 <div class="navigation-buttons">
-                    <button type="button" class="btn btn-primary" id="nextStep2">Próximo</button>
-                    <button type="button" class="btn btn-secondary" id="prevStep2">Anterior</button>
+                    <button type="button" class="btn btn-primary" id="nextStep3">Próximo</button>
+                    <button type="button" class="btn btn-secondary" id="prevStep3">Anterior</button>
                 </div>
-            </div>
-
-            <!-- Etapa 3: Dados Pessoais -->
-            <div class="step-content" data-step="3">
-                <!-- Conteúdo da etapa 3 -->
             </div>
 
             <!-- Etapa 4: Documentos -->
             <div class="step-content" data-step="4">
-                <!-- Conteúdo da etapa 4 -->
+                <div class="form-section">
+                    <h2 class="form-section-title">Documentos</h2>
+                    <div class="document-info">
+                        <p>Os documentos abaixo não são obrigatórios para o preenchimento do formulário, mas devem ser enviados junto com a procuração para validação.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>RG (frente e verso)</label>
+                        <div class="file-upload" data-doc="rg">
+                            <i class="fas fa-file-upload"></i>
+                            <p>Clique para anexar o RG</p>
+                            <input type="file" accept="image/*,.pdf" multiple>
+                        </div>
+                        <div class="file-list"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>CPF</label>
+                        <div class="file-upload" data-doc="cpf">
+                            <i class="fas fa-file-upload"></i>
+                            <p>Clique para anexar o CPF</p>
+                            <input type="file" accept="image/*,.pdf">
+                        </div>
+                        <div class="file-list"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Comprovante de Endereço</label>
+                        <div class="file-upload" data-doc="endereco">
+                            <i class="fas fa-file-upload"></i>
+                            <p>Clique para anexar o comprovante de endereço</p>
+                            <input type="file" accept="image/*,.pdf">
+                        </div>
+                        <div class="file-list"></div>
+                    </div>
+
+                    <div class="form-group" id="documentoEmpresa">
+                        <label>Ata da Empresa / Documentos da Coligação</label>
+                        <div class="file-upload" data-doc="docs-adicionais">
+                            <i class="fas fa-file-upload"></i>
+                            <p>Clique para anexar documentos adicionais</p>
+                            <input type="file" accept="image/*,.pdf" multiple>
+                        </div>
+                        <div class="file-list"></div>
+                    </div>
+                </div>
+
+                <div class="navigation-buttons">
+                    <button type="button" class="btn btn-secondary" id="prevStep4">Anterior</button>
+                    <button type="button" class="btn btn-primary" id="showSubmitBtn">Finalizar</button>
+                </div>
             </div>
 
             <div class="required-note">* Campos obrigatórios</div>
@@ -695,7 +788,34 @@
                 }
                 
                 errorMessage.hide();
-                nextStep(1);
+                
+                if (tipoProcuracao === 'pessoa_fisica') {
+                    // Se for Pessoa Física, vai direto para Dados Pessoais (etapa 3)
+                    $('.step-content[data-step="1"]').removeClass('active');
+                    $('.step-content[data-step="3"]').addClass('active');
+                    
+                    $('.step[data-step="1"]').removeClass('active').addClass('completed');
+                    $('.step[data-step="2"]').addClass('completed');
+                    $('.step[data-step="3"]').addClass('active');
+                } else {
+                    // Para outras opções, vai para Dados Específicos (etapa 2)
+                    // e mostra a seção correspondente
+                    $('.step-content[data-step="1"]').removeClass('active');
+                    $('.step-content[data-step="2"]').addClass('active');
+                    
+                    $('.step[data-step="1"]').removeClass('active').addClass('completed');
+                    $('.step[data-step="2"]').addClass('active');
+
+                    // Esconde todas as seções específicas
+                    $('#partidoSection, #pessoaJuridicaSection, #coligacaoSection').addClass('hidden');
+                    
+                    // Mostra a seção específica correspondente
+                    if (tipoProcuracao === 'pessoa_juridica') {
+                        $('#pessoaJuridicaSection').removeClass('hidden');
+                    } else if (tipoProcuracao === 'coligacao') {
+                        $('#coligacaoSection').removeClass('hidden');
+                    }
+                }
             });
 
             $('#nextStep2').click(function() {
@@ -704,6 +824,21 @@
 
             $('#prevStep2').click(function() {
                 prevStep(2);
+            });
+
+            $('#prevStep3').click(function() {
+                const tipoProcuracao = $('#tipoProcuracao').val();
+                if (tipoProcuracao === 'pessoa_fisica') {
+                    // Se for Pessoa Física, volta para a primeira etapa
+                    $('.step-content[data-step="3"]').removeClass('active');
+                    $('.step-content[data-step="1"]').addClass('active');
+                    
+                    $('.step[data-step="3"]').removeClass('active');
+                    $('.step[data-step="1"]').addClass('active').removeClass('completed');
+                } else {
+                    // Para outras opções, volta para Dados Específicos
+                    prevStep(3);
+                }
             });
 
             // Validação de CPF
@@ -824,15 +959,6 @@
                 const selectedValue = $(this).val();
                 const errorMessage = $(this).next('.error-message');
                 
-                // Esconde todas as seções
-                $('#partidoSection, #pessoaJuridicaSection, #coligacaoSection').addClass('hidden');
-                
-                // Mostra a seção selecionada
-                if (selectedValue && selectedValue !== 'pessoa_fisica') {
-                    $(`#${selectedValue}Section`).removeClass('hidden');
-                }
-                
-                // Esconde mensagem de erro se uma opção for selecionada
                 if (selectedValue) {
                     errorMessage.hide();
                 }
@@ -848,6 +974,100 @@
                 }
             });
 
+            // Consulta de CNPJ
+            $('#consultarCNPJ').click(function() {
+                const cnpj = $('#cnpjEmpresa').val().replace(/\D/g, '');
+                const errorMessage = $('#cnpjEmpresa').closest('.form-group').find('.error-message');
+                
+                if (!validarCNPJ(cnpj)) {
+                    errorMessage.show();
+                    return;
+                }
+                
+                errorMessage.hide();
+                
+                // Mostra um indicador de carregamento
+                $(this).prop('disabled', true).text('Consultando...');
+                
+                // Consulta à API BrasilAPI
+                consultarCNPJApi(cnpj)
+                    .then(data => {
+                        if (!data) {
+                            alert('CNPJ não encontrado ou serviço indisponível');
+                            return;
+                        }
+                        
+                        console.log('Dados retornados:', data); // Para debug
+                        
+                        // Preencher os campos com os dados da empresa
+                        $('#razaoSocial').val(data.razao_social || '');
+                        $('#nomeFantasia').val(data.nome_fantasia || data.razao_social || '');
+                        $('#logradouroEmpresa').val(data.logradouro || '');
+                        $('#numeroEmpresa').val(data.numero || '');
+                        $('#complementoEmpresa').val(data.complemento || '');
+                        $('#bairroEmpresa').val(data.bairro || '');
+                        $('#cidadeEmpresa').val(data.municipio || '');
+                        $('#estadoEmpresa').val(data.uf || '');
+                        $('#cepEmpresa').val(data.cep || '');
+                        
+                        // Campos que não vêm da API - deixa em branco para o usuário preencher
+                        $('#emailEmpresa').val('').prop('readonly', false);
+                        $('input[name="cargoEmpresa"]').val('').prop('readonly', false);
+                        
+                        // Mostrar a seção de dados da empresa
+                        $('#dadosEmpresa').removeClass('hidden');
+                    })
+                    .catch(error => {
+                        console.error('Erro na consulta:', error);
+                        alert('Erro ao consultar CNPJ. Verifique os dados e tente novamente.');
+                    })
+                    .finally(() => {
+                        // Restaura o botão
+                        $(this).prop('disabled', false).text('Consultar CNPJ');
+                    });
+            });
+
+            // Tornar os campos editáveis se os dados não estiverem corretos
+            $('#editarDadosEmpresa').click(function() {
+                $('#razaoSocial, #nomeFantasia, #logradouroEmpresa, #numeroEmpresa, #complementoEmpresa, #bairroEmpresa, #cidadeEmpresa, #estadoEmpresa, #cepEmpresa')
+                    .prop('readonly', false);
+            });
+
+            // Confirmar dados da empresa e prosseguir para a próxima etapa
+            $('#confirmarDadosEmpresa').click(function() {
+                nextStep(2);
+            });
+
+            // Função para consultar o CNPJ na API do governo federal
+            async function consultarCNPJApi(cnpj) {
+                try {
+                    // URL da API de consulta de CNPJ - usando BrasilAPI
+                    const response = await fetch(`https://brasilapi.com.br/api/cnpj/v1/${cnpj}`);
+                    
+                    if (!response.ok) {
+                        throw new Error('Erro ao consultar CNPJ');
+                    }
+                    
+                    const data = await response.json();
+                    
+                    // Mapeia os dados da API para o formato que esperamos
+                    return {
+                        razao_social: data.razao_social,
+                        nome_fantasia: data.nome_fantasia,
+                        logradouro: data.logradouro,
+                        numero: data.numero,
+                        complemento: data.complemento,
+                        bairro: data.bairro,
+                        municipio: data.municipio,
+                        uf: data.uf,
+                        cep: data.cep
+                    };
+                } catch (error) {
+                    console.error('Erro na consulta:', error);
+                    return null;
+                }
+            }
+
             // Envio do formulário
             $('#procuracaoForm').submit(async function(e) {
                 e.preventDefault();
@@ -857,10 +1077,32 @@
                 
                 try {
                     const formData = new FormData(this);
-                    const data = Object.fromEntries(formData.entries());
-                    data.timestamp = new Date().toISOString();
                     
-                    const response = await fetch('https://webhook.site/your-webhook-url', {
+                    // Adiciona os arquivos ao FormData
+                    $('.file-upload input[type="file"]').each(function() {
+                        const docType = $(this).closest('.file-upload').data('doc');
+                        const files = this.files;
+                        for (let i = 0; i < files.length; i++) {
+                            formData.append(`file_${docType}[]`, files[i]);
+                        }
+                    });
+                    
+                    formData.append('timestamp', new Date().toISOString());
+                    
+                    // Para envio usando JSON, precisamos converter FormData para objeto
+                    const data = {};
+                    formData.forEach((value, key) => {
+                        // Ignora arquivos para a versão JSON
+                        if (!key.startsWith('file_')) {
+                            data[key] = value;
+                        }
+                    });
+                    
+                    // URL do Worker do Cloudflare (após implantação)
+                    const workerUrl = 'https://formulario-procuracao-worker.seu-dominio.workers.dev';
+                    
+                    // Para o banco D1, enviamos apenas os dados JSON (sem arquivos)
+                    const responseD1 = await fetch(workerUrl, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -868,12 +1110,46 @@
                         body: JSON.stringify(data)
                     });
                     
-                    if (!response.ok) {
-                        throw new Error('Erro ao enviar formulário');
+                    const resultD1 = await responseD1.json();
+                    
+                    if (!responseD1.ok || !resultD1.success) {
+                        throw new Error(resultD1.error || 'Erro ao salvar dados no banco');
                     }
                     
+                    // Para o webhook, enviamos o FormData completo com arquivos
+                    const webhookUrl = 'https://flow.elegis.com.br/webhook-test/9f9f8057-0c33-4008-90eb-4dcd8e83464c';
+                    
+                    // Se o webhook aceitar FormData com arquivos:
+                    await fetch(webhookUrl, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    // Se o webhook só aceitar JSON (sem arquivos):
+                    // await fetch(webhookUrl, {
+                    //     method: 'POST',
+                    //     headers: { 'Content-Type': 'application/json' },
+                    //     body: JSON.stringify(data)
+                    // });
+                    
                     alert('Formulário enviado com sucesso!');
+                    
+                    // Resetar formulário
                     this.reset();
+                    
+                    // Limpar listas de arquivos
+                    $('.file-list').empty();
+                    
+                    // Esconder botão de envio
+                    $('#submitButton').addClass('hidden');
+                    $('#showSubmitBtn').removeClass('hidden');
+                    
+                    // Voltar para a primeira etapa
+                    $('.step-content').removeClass('active');
+                    $('.step-content[data-step="1"]').addClass('active');
+                    
+                    $('.step').removeClass('active').removeClass('completed');
+                    $('.step[data-step="1"]').addClass('active');
                     
                 } catch (error) {
                     console.error('Erro:', error);
@@ -881,6 +1157,56 @@
                 } finally {
                     submitButton.prop('disabled', false).removeClass('loading');
                 }
+            });
+
+            $('#nextStep3').click(function() {
+                // Mostrar ou esconder documentos específicos baseado no tipo de procuração
+                const tipoProcuracao = $('#tipoProcuracao').val();
+                if (tipoProcuracao === 'pessoa_juridica' || tipoProcuracao === 'coligacao') {
+                    $('#documentoEmpresa').show();
+                } else {
+                    $('#documentoEmpresa').hide();
+                }
+                
+                nextStep(3);
+            });
+            
+            $('#prevStep4').click(function() {
+                prevStep(4);
+            });
+            
+            $('#showSubmitBtn').click(function() {
+                $('#submitButton').removeClass('hidden');
+                $(this).addClass('hidden');
+            });
+
+            // Controle de arquivos
+            $('.file-upload').click(function() {
+                $(this).find('input[type="file"]').click();
+            });
+
+            $('.file-upload input[type="file"]').change(function() {
+                const fileList = $(this).closest('.form-group').find('.file-list');
+                const files = this.files;
+                
+                fileList.empty();
+                
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    const fileItem = $('<div class="file-item">')
+                        .append($('<span class="file-name">').text(file.name))
+                        .append($('<span class="remove-file">').html('&times;'));
+                    
+                    fileList.append(fileItem);
+                }
+            });
+
+            $(document).on('click', '.remove-file', function() {
+                const fileList = $(this).closest('.file-list');
+                const fileUpload = fileList.closest('.form-group').find('.file-upload input[type="file"]');
+                
+                fileList.empty();
+                fileUpload.val('');
             });
         });
     </script>

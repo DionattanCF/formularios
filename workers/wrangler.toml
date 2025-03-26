@@ -1,0 +1,20 @@
+name = "formulario-procuracao-worker"
+main = "formulario_worker.js"
+compatibility_date = "2023-10-30"
+
+# Permitir uploads de até 25MB
+[site]
+bucket = "./public"
+
+[limits]
+cpu_ms = 50
+memory_mb = 128
+
+# Configuração para permitir uploads maiores
+[vars]
+MAX_UPLOAD_SIZE = "25MB"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "banco_juridico"
+database_id = "fee873da-0b4c-484d-8258-2ee139b246fd"
